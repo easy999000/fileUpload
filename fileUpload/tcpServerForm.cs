@@ -77,7 +77,7 @@ namespace fileUpload
 
         void liaotian(tcpDataCommunication tcpComm, stringMsg msg)
         {
-            showMsg(tcpComm.tcpClient1.Client.LocalEndPoint.ToString()+"---"+msg.value["value"]);
+            showMsg(tcpComm.tcpClient1.Client.RemoteEndPoint.ToString()+"---"+msg.value["value"]);
 
         }
         void denglu(tcpDataCommunication tcpComm, stringMsg msg)

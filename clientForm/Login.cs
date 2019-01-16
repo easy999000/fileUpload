@@ -12,6 +12,8 @@ using System.Xml.Linq;
 using tools.net;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using DB.Services;
+using fileUpload;
 
 namespace clientForm
 {
@@ -20,7 +22,7 @@ namespace clientForm
 
         tools.net.zTcpClient tcpClient ;
         Form1 form1;
-
+        UserService user = new UserService();
         public Login(tools.net.zTcpClient tcpClient1,Form1 f1)
         {
             InitializeComponent();
@@ -35,8 +37,6 @@ namespace clientForm
         //登陆
         private void button1_Click(object sender, EventArgs e)
         {
-            
-
             string account = textBox1.Text;
             string password = textBox2.Text;
             stringMsg sm = new stringMsg();
@@ -61,6 +61,8 @@ namespace clientForm
             {
                 MessageBox.Show("登陆成功!");
                 //this.Close();
+                RetUser curr = user.Login(textBox1.Text, textBox2.Text);
+                CurrUser.currUser = curr.User;
                 CloseFrom();
             }
             else

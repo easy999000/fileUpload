@@ -37,7 +37,51 @@ namespace DB.Services
             }
         }
 
+        /// <summary>
+        /// 获取配置路径
+        /// </summary>
+        /// <returns></returns>
+        public ConfigInfo GetSave()
+        {
+            using (DB db = new DB())
+            {
+                try
+                {
+                    ConfigInfo config = db.ConfigInfo.FirstOrDefault();
+                    return config;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="newPath"></param>
+        /// <returns></returns>
+        public bool EditPath(string  newPath)
+        {
+            using (DB db = new DB())
+            {
+                try
+                {
+                    ConfigInfo config = db.ConfigInfo.FirstOrDefault();
+                    config.Path = newPath;
+                    db.SaveChanges();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+        }
+
     }
+
 
 
     public class RetUser

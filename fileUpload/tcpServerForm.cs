@@ -20,10 +20,12 @@ namespace fileUpload
     {
 
         UserService user = new UserService();
-        private string path = File.ReadAllText(Common.FILE_NAME);
+        private string path;
         public tcpServerForm()
         {
             InitializeComponent();
+            ConfigInfo config = user.GetSave();
+            path = config.Path;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -64,8 +66,6 @@ namespace fileUpload
                     break;
                 case msgEnum.fileUpload:
                     showMsg(string.Format("收到文件", msg.value["value"]));
-
-
                     break;
                 case msgEnum.dengru:
                     denglu(tcpComm, msg);
@@ -87,6 +87,8 @@ namespace fileUpload
             string account = msg.value["account"];
             string pwd = msg.value["pwd"];
             RetUser curr = user.Login(account, pwd);
+
+            
 
             if (curr.Success)
             {
@@ -235,8 +237,8 @@ namespace fileUpload
             ListViewItem ret = new ListViewItem();
             ret.Text = "...";
             this.listView1.Items.Add(ret);
-            FileInfo[] fileinfoList = root2.GetFiles();
-            foreach (FileInfo fi in fileinfoList)
+            System.IO.FileInfo[] fileinfoList = root2.GetFiles();
+            foreach (System.IO.FileInfo fi in fileinfoList)
             {
                 string fileName = fi.Name;
                 string filePath = fi.FullName;

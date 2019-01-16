@@ -1,4 +1,6 @@
 ﻿using BLE;
+using DB;
+using DB.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +15,8 @@ namespace clientForm
 {
     public partial class Form1 : Form
     {
+
+        UserService user = new UserService();
         public Form1()
         {
             InitializeComponent();
@@ -60,8 +64,11 @@ namespace clientForm
 
                 string fileName = System.IO.Path.GetFileName(t2.sendFileFullPath);
 
-                //string reviced = System.IO.Path.Combine(this.textBox1.Text+":"+this.textBox2.Text+"/D:\\", fileName);//d:\\
-                string reviced = System.IO.Path.Combine("d:\\", fileName);//d:\\
+
+                ConfigInfo config = user.GetSave();
+                string reviced = System.IO.Path.Combine(config.Path + "\\" + CurrUser.currUser.ID, fileName);//d:\\
+
+
 
                 stringMsg sm = new stringMsg();
                 sm.name = msgEnum.fileUpload;
@@ -70,8 +77,13 @@ namespace clientForm
                 t2.ReceiveFullMsg = sm.modelToJson();
 
                 t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());
-                zTcpClient1.tcpComm.sendData(t2.toBleStream());
+                //zTcpClient1.tcpComm.sendData(t2.toBleStream());
 
+                //把流对象传到服务端 让这部分代码在服务端执行
+                //senddata方法只有t11 没有t12的   
+                //写了关于t12的senddata方法后
+                //服务端只能用strMsg接  接不到
+                //如果要改这个 需要把监听改了  改动太大 担心把好用的改坏了就没有改
 
             }
         }
@@ -80,7 +92,7 @@ namespace clientForm
         {
             zTcpClient1.tcpComm.stop();
         }
- 
+
 
 
     }

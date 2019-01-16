@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DB.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,6 +15,7 @@ namespace fileUpload
     public partial class seting : Form
     {
         private string sPath;
+        UserService user = new UserService();
 
         public seting()
         {
@@ -24,8 +26,18 @@ namespace fileUpload
         {
             if (this.textBox5.Text.Length > 0)
             {
-                WriteFile(sPath);
-                MessageBox.Show("保存成功！", "提示");
+                bool bl = user.EditPath(this.textBox5.Text);
+                //WriteFile(sPath);
+                if (bl)
+                {
+                    MessageBox.Show("保存成功！", "提示");
+                }
+                else
+                {
+                    MessageBox.Show("保存失败！", "提示");
+                }
+                      
+               
             }
             else
             {

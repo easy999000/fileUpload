@@ -15,7 +15,7 @@ namespace BLE.bleClass
         public t12() : base(BLEcommand.t12)
         {
         }
-          
+
         /// <summary>
         /// 接收文件完整信息stringMsg格式
         /// </summary>
@@ -31,7 +31,6 @@ namespace BLE.bleClass
         {
             get; set;
         }
-
 
         #region 接收数据变量
         /// <summary>
@@ -154,9 +153,9 @@ namespace BLE.bleClass
                         ////当前位置等于消息长度,为消息结尾
                         filePathByte.Add(b);
                         string pathJson = getString(filePathByte.ToArray());
-                        
-                        stringMsg sm =  stringMsg.jsonToModel(pathJson);
-                        
+
+                        stringMsg sm = stringMsg.jsonToModel(pathJson);
+
                         this.ReceiveFullMsg = sm.value["value"];
 
                         try
@@ -200,13 +199,13 @@ namespace BLE.bleClass
 
 
                     }
-                    else if (currentPosition < beforIndex + msgByteLength + fileDataLength )
+                    else if (currentPosition < beforIndex + msgByteLength + fileDataLength)
                     {
                         ////当前位置小于文件长度,为文件内容
                         fileWrite.WriteByte(b);
                         fileWrite.Flush();
                     }
-                    else if (currentPosition >= beforIndex + msgByteLength + fileDataLength )
+                    else if (currentPosition >= beforIndex + msgByteLength + fileDataLength)
                     {
                         ////消息结束
                         fileWrite.WriteByte(b);
@@ -239,42 +238,54 @@ namespace BLE.bleClass
         {
             return base.toBleByte();
         }
-        public void   toBleStream(System.IO.Stream sr)
+        public void toBleStream(System.IO.Stream sr)
         {
-            byte[] path = getByte(ReceiveFullMsg);
-            byte[] pathLength = getByte(path.Length);
-
-            Stream fileStream = System.IO.File.OpenRead(sendFileFullPath);
-            byte[] streamLength = getByte(fileStream.Length);
-
-            //////////////////////
+            //try
+            //{
 
 
+                byte[] path = getByte(ReceiveFullMsg);
+                byte[] pathLength = getByte(path.Length);
+
+                Stream fileStream = System.IO.File.OpenRead(sendFileFullPath);
+                byte[] streamLength = getByte(fileStream.Length);
+
+                //////////////////////
 
 
-            ////////////////
-            allDataLength = pathLength.LongLength + path.LongLength;///1
 
-            messageData[0] = pathLength;//2
 
-            messageData[1] = streamLength;///3
+                ////////////////
+                allDataLength = pathLength.LongLength + path.LongLength;///1
 
-            messageData[2] = path;///3
+                messageData[0] = pathLength;//2
 
-            List<byte> l1 = new List<byte>();
-            l1.AddRange(head);
-            l1.Add((byte)command);
-            l1.AddRange(getByte(this.allDataLength));
+                messageData[1] = streamLength;///3
 
-            sr.Write(l1.ToArray(), 0, l1.Count);
-            sr.Write(messageData[0], 0, messageData[0].Count());///报连接错误
+                messageData[2] = path;///3
 
-            sr.Write(messageData[1], 0, messageData[1].Count());
-            sr.Write(messageData[2], 0, messageData[2].Count());
+                List<byte> l1 = new List<byte>();
+                l1.AddRange(head);
+                l1.Add((byte)command);
+                l1.AddRange(getByte(this.allDataLength));
 
-            fileStream.CopyTo(sr);
+            
+                sr.Write(l1.ToArray(), 0, l1.Count);
+                sr.Write(messageData[0], 0, messageData[0].Count());///报连接错误
 
-            fileStream.Close();
+                sr.Write(messageData[1], 0, messageData[1].Count());
+                sr.Write(messageData[2], 0, messageData[2].Count());
+
+                fileStream.CopyTo(sr);
+
+                fileStream.Close();
+            //}
+            //catch (Exception ex)
+            //{
+
+            //    string x = string.Format(@"[Message]:{0},[StackTrace]:{1},[Source]:{2},[TargetSite]:{3},[HResult]:{4}", ex.Message, ex.StackTrace, ex.Source, ex.TargetSite, ex.HResult);
+            //    string y = x;
+            //}
         }
         public System.IO.Stream toBleStream()
         {
@@ -288,7 +299,7 @@ namespace BLE.bleClass
         void setStream(object o)
         {
             MemoryStream ms = o as MemoryStream;
-            if (ms==null)
+            if (ms == null)
             {
                 return;
             }
@@ -296,7 +307,7 @@ namespace BLE.bleClass
             byte[] path = getByte(ReceiveFullMsg);
             byte[] pathLength = getByte(path.Length);
 
-            Stream  fileStream = System.IO.File.OpenRead(sendFileFullPath);
+            Stream fileStream = System.IO.File.OpenRead(sendFileFullPath);
             byte[] streamLength = getByte(fileStream.Length);
 
 
@@ -306,7 +317,7 @@ namespace BLE.bleClass
             l1.AddRange(getByte(this.allDataLength));
 
             allDataLength = pathLength.LongLength + path.LongLength;///1
-             
+
             messageData[0] = pathLength;//2
 
             messageData[1] = streamLength;///3
@@ -321,7 +332,7 @@ namespace BLE.bleClass
             fileStream.CopyTo(ms);
 
             fileStream.Close();
-          //  ms.Close();
+            //  ms.Close();
 
 
         }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace tools.net
 {
-    public class tcpServer
+    public class zTcpServer
     {
         #region 接收相关变量
         /// <summary>
@@ -33,7 +33,7 @@ namespace tools.net
 
         #endregion
 
-        public tcpServer(IPAddress ip, int port)
+        public zTcpServer(IPAddress ip, int port)
         {
             tcpListener1 = new TcpListener(ip, port);
             connControl.newMessageEvent += newMessageEventFun;

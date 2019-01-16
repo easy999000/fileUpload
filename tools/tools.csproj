@@ -43,10 +43,10 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="message.cs" />
-    <Compile Include="net\tcpClient.cs" />
+    <Compile Include="net\zTcpClient.cs" />
     <Compile Include="net\tcpConnectionControl.cs" />
     <Compile Include="net\tcpDataCommunication.cs" />
-    <Compile Include="net\tcpServer.cs" />
+    <Compile Include="net\zTcpServer.cs" />
     <Compile Include="zHttpListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

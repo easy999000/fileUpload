@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace tools.net
 {
-    public class tcpClient
+    public class zTcpClient
     {
 
 

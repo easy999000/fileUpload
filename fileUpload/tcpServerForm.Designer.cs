@@ -29,11 +29,12 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.序号 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.姓名 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.地址 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.状态 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -53,15 +54,15 @@
             this.button1 = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.序号 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.姓名 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.地址 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.状态 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -69,7 +70,6 @@
             this.tabPage2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -89,6 +89,52 @@
             this.splitContainer1.Size = new System.Drawing.Size(901, 403);
             this.splitContainer1.SplitterDistance = 354;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.textBox3);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.textBox2);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(354, 56);
+            this.panel1.TabIndex = 4;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(273, 18);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(66, 21);
+            this.textBox3.TabIndex = 3;
+            this.textBox3.Text = "8888";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(232, 21);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 12);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "端口:";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(65, 18);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(161, 21);
+            this.textBox2.TabIndex = 1;
+            this.textBox2.Text = "0.0.0.0";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 21);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(47, 12);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "本机ip:";
             // 
             // dataGridView1
             // 
@@ -110,30 +156,6 @@
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.Size = new System.Drawing.Size(354, 341);
             this.dataGridView1.TabIndex = 0;
-            // 
-            // 序号
-            // 
-            this.序号.HeaderText = "序号";
-            this.序号.Name = "序号";
-            this.序号.ReadOnly = true;
-            // 
-            // 姓名
-            // 
-            this.姓名.HeaderText = "姓名";
-            this.姓名.Name = "姓名";
-            this.姓名.ReadOnly = true;
-            // 
-            // 地址
-            // 
-            this.地址.HeaderText = "地址";
-            this.地址.Name = "地址";
-            this.地址.ReadOnly = true;
-            // 
-            // 状态
-            // 
-            this.状态.HeaderText = "状态";
-            this.状态.Name = "状态";
-            this.状态.ReadOnly = true;
             // 
             // tabControl1
             // 
@@ -261,11 +283,14 @@
             // listView1
             // 
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView1.FullRowSelect = true;
             this.listView1.Location = new System.Drawing.Point(3, 3);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(529, 349);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.List;
+            this.listView1.DoubleClick += new System.EventHandler(this.listView1_DoubleClick);
             // 
             // panel3
             // 
@@ -298,6 +323,7 @@
             this.button3.TabIndex = 6;
             this.button3.Text = "设置";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button2
             // 
@@ -329,51 +355,33 @@
             this.panel4.Size = new System.Drawing.Size(901, 403);
             this.panel4.TabIndex = 2;
             // 
-            // panel1
+            // 序号
             // 
-            this.panel1.Controls.Add(this.textBox3);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.textBox2);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(354, 56);
-            this.panel1.TabIndex = 4;
+            this.序号.DataPropertyName = "ID";
+            this.序号.HeaderText = "序号";
+            this.序号.Name = "序号";
+            this.序号.ReadOnly = true;
             // 
-            // textBox3
+            // 姓名
             // 
-            this.textBox3.Location = new System.Drawing.Point(273, 18);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(66, 21);
-            this.textBox3.TabIndex = 3;
-            this.textBox3.Text = "8888";
+            this.姓名.DataPropertyName = "Name";
+            this.姓名.HeaderText = "姓名";
+            this.姓名.Name = "姓名";
+            this.姓名.ReadOnly = true;
             // 
-            // label3
+            // 地址
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(232, 21);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 12);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "端口:";
+            this.地址.DataPropertyName = "Address";
+            this.地址.HeaderText = "地址";
+            this.地址.Name = "地址";
+            this.地址.ReadOnly = true;
             // 
-            // textBox2
+            // 状态
             // 
-            this.textBox2.Location = new System.Drawing.Point(65, 18);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(161, 21);
-            this.textBox2.TabIndex = 1;
-            this.textBox2.Text = "0.0.0.0";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 21);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(47, 12);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "本机ip:";
+            this.状态.DataPropertyName = "State";
+            this.状态.HeaderText = "状态";
+            this.状态.Name = "状态";
+            this.状态.ReadOnly = true;
             // 
             // tcpServerForm
             // 
@@ -384,10 +392,13 @@
             this.Controls.Add(this.panel3);
             this.Name = "tcpServerForm";
             this.Text = "tcpServer";
+            this.Load += new System.EventHandler(this.tcpServerForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -396,8 +407,6 @@
             this.tabPage2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -406,10 +415,6 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn 序号;
-        private System.Windows.Forms.DataGridViewTextBoxColumn 姓名;
-        private System.Windows.Forms.DataGridViewTextBoxColumn 地址;
-        private System.Windows.Forms.DataGridViewTextBoxColumn 状态;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button button4;
@@ -434,5 +439,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn 序号;
+        private System.Windows.Forms.DataGridViewTextBoxColumn 姓名;
+        private System.Windows.Forms.DataGridViewTextBoxColumn 地址;
+        private System.Windows.Forms.DataGridViewTextBoxColumn 状态;
     }
 }

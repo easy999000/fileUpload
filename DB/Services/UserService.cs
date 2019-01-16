@@ -14,7 +14,7 @@ namespace DB.Services
         /// <param name="account"></param>
         /// <param name="pwd"></param>
         /// <returns></returns>
-        public bool Login(string account, string pwd)
+        public RetUser Login(string account, string pwd)
         {
             using (DB db = new DB())
             {
@@ -23,18 +23,27 @@ namespace DB.Services
                     UserInfo user = db.UserInfo.Where(x => x.Account == account && x.PWD == pwd).FirstOrDefault();
                     if (user != null)
                     {
-                        return true;
+                        return new RetUser() { Success = true, User = user };
                     }
                     else
                     {
-                        return false;
+                        return new RetUser() { Success = false };
                     }
                 }
                 catch (Exception ex)
                 {
-                    return false;
+                    return new RetUser() { Success = false };
                 }
             }
         }
+
+    }
+
+
+    public class RetUser
+    {
+        public UserInfo User { get; set; }
+
+        public bool Success { get; set; }
     }
 }

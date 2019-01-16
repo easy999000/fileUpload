@@ -34,6 +34,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\DuoJianKeJi\Desktop\fileUpload\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>C:\Users\DuoJianKeJi\Desktop\fileUpload\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -51,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CurrUser.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +108,14 @@
       <Project>{95c08872-c518-49dd-8447-99a3cd838dcf}</Project>
       <Name>BLE</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DB\DB.csproj">
+      <Project>{CBDD8776-D620-486F-BBFD-27D98EE23233}</Project>
+      <Name>DB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\fileUpload\fileUpload.csproj">
+      <Project>{6030A7A2-0045-4D3D-BA4A-3D427422CEF9}</Project>
+      <Name>fileUpload</Name>
+    </ProjectReference>
     <ProjectReference Include="..\tools\tools.csproj">
       <Project>{9102e97b-565b-43c7-afeb-2e82f5b9c054}</Project>
       <Name>tools</Name>
@@ -107,6 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="TextFile1.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -12,27 +12,28 @@ using System.Xml.Linq;
 using tools.net;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using DB.Services;
+using fileUpload;
 
 namespace clientForm
 {
     public partial class Login : Form
     {
-        // tools.net.tcpClient tcpClient1 = new tools.net.tcpClient();
 
-        tools.net.tcpClient tcpClient = new tools.net.tcpClient();
-        //Form1 ff = new Form1();
-        //Control button5 = new Control();
-        public Login(tools.net.tcpClient tcpClient1, Form1 form1)
+        tools.net.zTcpClient tcpClient ;
+        Form1 form1;
+        UserService user = new UserService();
+        public Login(tools.net.zTcpClient tcpClient1,Form1 f1)
         {
             InitializeComponent();
             tcpClient = tcpClient1;
-            //ff = form1;
-            //button5 = form1.button5;
-            //button5.Enabled = false;
-       
-
+            form1 = f1;
         }
 
+        private void Login_Load(object sender, EventArgs e)
+        {
+            tcpClient.tcpComm.newBleMessageEvent += newBlemessageEventFun;
+        }
         //登陆
         private void button1_Click(object sender, EventArgs e)
         {
@@ -44,7 +45,6 @@ namespace clientForm
             sm.value.Add("pwd", password);
             //Form1.tcpClient1.tcpComm.sendData(sm);
             tcpClient.tcpComm.sendData(sm);
-            tcpClient.tcpComm.newBleMessageEvent += newBlemessageEventFun;
             //Form1.tcpClient1.tcpComm.newBleMessageEvent += newBlemessageEventFun;
         }
 
@@ -53,24 +53,45 @@ namespace clientForm
         {
             string jsonText = ((BLE.bleClass.t11)ble).msg;
             JObject jo = (JObject)JsonConvert.DeserializeObject(jsonText);
+
+
+
             bool bl = Convert.ToBoolean(jo["value"]["return"]);
             if (bl)
             {
                 MessageBox.Show("登陆成功!");
-                // ff.Controls["button5"].Enabled = false;
-                //button5.Enabled = true;
+                //this.Close();
+                RetUser curr = user.Login(textBox1.Text, textBox2.Text);
+                CurrUser.currUser = curr.User;
+                CloseFrom();
             }
             else
             {
+                tcpClient.tcpComm.stop();
                 MessageBox.Show("账号或密码错误!");
             }
+
         }
         void denglu(tcpDataCommunication tcpComm, stringMsg msg)
         {
             string value = msg.value["return"];
-
             MessageBox.Show(value);
+        }
+
+        //关闭窗体
+        void CloseFrom()
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new Action(CloseFrom));
+            }
+            else
+            {
+                this.Close();
+            }
 
         }
+
+
     }
 }

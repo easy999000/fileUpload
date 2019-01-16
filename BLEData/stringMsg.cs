@@ -30,7 +30,6 @@ namespace BLE
             return JsonConvert.DeserializeObject<stringMsg>(json);
         }
 
-
     }
 
 

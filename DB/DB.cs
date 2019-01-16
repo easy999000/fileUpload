@@ -8,11 +8,12 @@ namespace DB
     public partial class DB : DbContext
     {
         public DB()
-            : base("name = DB")//"name =DB"
+            : base("name=DB")
         {
-           // base.Database.Connection.ConnectionString = "data source=192.168.1.182;initial catalog=Test;persist security info=True;user id=sa;password=ABCabc123;MultipleActiveResultSets=True;App=EntityFramework";
         }
 
+        public virtual DbSet<ConfigInfo> ConfigInfo { get; set; }
+        public virtual DbSet<FileInfo> FileInfo { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

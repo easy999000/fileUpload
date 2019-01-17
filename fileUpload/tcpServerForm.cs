@@ -58,14 +58,16 @@ namespace fileUpload
         /// <param name="tcpComm"></param>
         /// <param name="msg"></param>
         void newBlemessageEventFun(tcpDataCommunication tcpComm, stringMsg msg)
-        {      
+        {
+
             switch (msg.name)
             {
                 case msgEnum.liaotian:
                     liaotian(tcpComm, msg);
                     break;
                 case msgEnum.fileUpload:
-                    showMsg(string.Format("收到文件", msg.value["value"]));
+                    showMsg(string.Format("收到文件{0}", msg.value["FileName"]));
+                    bool bl = AddFileInfo(msg);
                     break;
                 case msgEnum.dengru:
                     denglu(tcpComm, msg);
@@ -74,6 +76,16 @@ namespace fileUpload
                     break;
             }
 
+        }
+
+        private bool AddFileInfo(stringMsg msg)
+        {
+            int userId = Convert.ToInt32(msg.value["UserId"]);
+            string filePath = msg.value["value"];
+            string firstFloor = msg.value["FirstFloor"];
+            string fileName = msg.value["FileName"];
+            bool bl = user.AddFileInfo(userId, filePath, firstFloor, fileName);
+            return bl;
         }
 
         void liaotian(tcpDataCommunication tcpComm, stringMsg msg)
@@ -88,7 +100,7 @@ namespace fileUpload
             string pwd = msg.value["pwd"];
             RetUser curr = user.Login(account, pwd);
 
-            
+
 
             if (curr.Success)
             {
@@ -99,7 +111,7 @@ namespace fileUpload
                 Common.tcpList.Add(new TCP() { ID = curr.User.ID, Name = curr.User.Account, Address = address });
                 BindDataGridView(Common.tcpList);
             }
-            
+
             BLE.stringMsg m1 = new BLE.stringMsg();
             m1.name = BLE.msgEnum.dengru;
             m1.value.Add("return", curr.Success.ToString());

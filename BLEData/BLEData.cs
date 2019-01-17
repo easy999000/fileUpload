@@ -124,6 +124,14 @@ namespace BLE
         {
             return true;
         }
+       
+        /// <summary>
+        /// 对流直接写入
+        /// </summary>
+        /// <param name="sr"></param>
+        public virtual void toBleStream(System.IO.Stream sr)
+        {
+        }
 
 
         /// <summary>

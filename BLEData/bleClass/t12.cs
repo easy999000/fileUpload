@@ -240,47 +240,47 @@ namespace BLE.bleClass
         {
             return base.toBleByte();
         }
-        public void toBleStream(System.IO.Stream sr)
+        public override void toBleStream(System.IO.Stream sr)
         {
             //try
             //{
 
 
-                byte[] path = getByte(ReceiveFullMsg);
-                byte[] pathLength = getByte(path.Length);
+            byte[] path = getByte(ReceiveFullMsg);
+            byte[] pathLength = getByte(path.Length);
 
-                Stream fileStream = System.IO.File.OpenRead(sendFileFullPath);
-                byte[] streamLength = getByte(fileStream.Length);
+            Stream fileStream = System.IO.File.OpenRead(sendFileFullPath);
+            byte[] streamLength = getByte(fileStream.Length);
 
-                //////////////////////
-
-
+            //////////////////////
 
 
-                ////////////////
-                allDataLength = pathLength.LongLength + path.LongLength;///1
 
-                messageData[0] = pathLength;//2
 
-                messageData[1] = streamLength;///3
+            ////////////////
+            allDataLength = pathLength.LongLength + path.LongLength;///1
 
-                messageData[2] = path;///3
+            messageData[0] = pathLength;//2
 
-                List<byte> l1 = new List<byte>();
-                l1.AddRange(head);
-                l1.Add((byte)command);
-                l1.AddRange(getByte(this.allDataLength));
+            messageData[1] = streamLength;///3
 
-            
-                sr.Write(l1.ToArray(), 0, l1.Count);
-                sr.Write(messageData[0], 0, messageData[0].Count());///报连接错误
+            messageData[2] = path;///3
 
-                sr.Write(messageData[1], 0, messageData[1].Count());
-                sr.Write(messageData[2], 0, messageData[2].Count());
+            List<byte> l1 = new List<byte>();
+            l1.AddRange(head);
+            l1.Add((byte)command);
+            l1.AddRange(getByte(this.allDataLength));
 
-                fileStream.CopyTo(sr);
 
-                fileStream.Close();
+            sr.Write(l1.ToArray(), 0, l1.Count);
+            sr.Write(messageData[0], 0, messageData[0].Count());///报连接错误
+
+            sr.Write(messageData[1], 0, messageData[1].Count());
+            sr.Write(messageData[2], 0, messageData[2].Count());
+
+            fileStream.CopyTo(sr);
+
+            fileStream.Close();
             //}
             //catch (Exception ex)
             //{

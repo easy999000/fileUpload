@@ -21,6 +21,8 @@ namespace tools.net
 
         public readonly TcpClient tcpClient1;
 
+        tcpDataQueueControl DataQueue = new tcpDataQueueControl();
+
         #region 接收相关字段
         List<byte> data = new List<byte>();
         /// <summary>
@@ -53,6 +55,10 @@ namespace tools.net
         #endregion
         #region 发送相关字段
 
+        /// <summary>
+        /// 发送线程
+        /// </summary>
+        System.Threading.Thread thSending;
         #endregion
 
         /////要测试的几个问题,可不可以同时进行读写.可不可以一个tcp类,get多个流进行读写.多个流是不是一个实例.,可不可以多线程读写.
@@ -386,6 +392,65 @@ namespace tools.net
             }
         }
 
+        public void  addSendBle(BLEData ble)
+        {
+            this.DataQueue.Enqueue(ble);
+        }
+
+        /// <summary>
+        /// 读取数据
+        /// </summary>
+        /// <param name="o"></param>
+        void thSend(object o)
+        { 
+
+#if DEBUG
+
+            //    tools.log.writeLog("tcpListenerControl.readByte 线程:{0},数据等待", System.Threading.Thread.CurrentThread.ManagedThreadId);
+#endif
+            while (true)
+            {
+                try
+                {
+
+                    BLEData bleData = this.DataQueue.Dequeue();
+                    if (bleData == null)
+                    {
+                        continue;
+                    }
+#if DEBUG
+                    //   tools.log.writeLog("tcpDataProcessingControl.tcpDataProcessing 线程:{0},取到了一条数据", System.Threading.Thread.CurrentThread.ManagedThreadId);
+#endif
+                    if (bleData.command == BLEcommand.t12)
+                    {
+                        bleData.toBleStream(this.sendDataGetStream());
+
+                    }
+                    else
+                    {
+                        sendData(bleData);
+                    } 
+
+                }
+                catch (NotSupportedException ex1)
+                {
+                    connectionDisconnection();
+                }
+                catch (ObjectDisposedException ex2)
+                {
+                    connectionDisconnection();
+                }
+                catch (IOException ex3)
+                {
+                    connectionDisconnection();
+                }
+                catch (System.Threading.ThreadAbortException ex)
+                {
+                    ///线程终止
+                    connectionDisconnection();
+                }
+            }
+        }
         #endregion
 
 

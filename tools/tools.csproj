@@ -42,7 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="log.cs" />
     <Compile Include="message.cs" />
+    <Compile Include="net\tcpDataQueue.cs" />
+    <Compile Include="net\tcpDataQueueControl.cs" />
     <Compile Include="net\zTcpClient.cs" />
     <Compile Include="net\tcpConnectionControl.cs" />
     <Compile Include="net\tcpDataCommunication.cs" />

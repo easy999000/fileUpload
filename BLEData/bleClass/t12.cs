@@ -162,7 +162,8 @@ namespace BLE.bleClass
 
                         try
                         {
-                            fileWrite = System.IO.File.Create(ReceiveFullMsg);
+                            string rfmPath= stringMsg.jsonToModel(pathJson).value["value"];
+                            fileWrite = System.IO.File.Create(rfmPath);//ReceiveFullMsg
                         }
                         #region 创建文件异常处理
                         catch (UnauthorizedAccessException ex1)

@@ -169,6 +169,7 @@ namespace tools.net
             int writeRet = -1;
             for (int i = 0; i < count; i++)
             {
+              
                 byte b = tcpByte[i];
 
                 switch (currentPosition)
@@ -206,6 +207,12 @@ namespace tools.net
                             errorData();
                             break;
                         }
+                        if (!b.ToString().Equals("11")&& !b.ToString().Equals("12"))
+                        {
+                            errorData();
+                            break;
+                        }
+                      
                         data.Add(b);
                         ble = BLEData.CreateBle(b1);
                         currentPosition++;
@@ -229,8 +236,9 @@ namespace tools.net
 
                             dataLength = BLEData.byteToInt64(data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]);
                         }
-                        catch
+                        catch(Exception ex)
                         {
+                            tools.log.writeLog("readData:第{0}次,错误:{1}", i.ToString(), ex.Message);
                             errorData();
                             break;
                         }
@@ -283,6 +291,7 @@ namespace tools.net
         void successData()
         {
 #if DEBUG
+            Console.WriteLine("test");
             Console.WriteLine(ble.ToString());
 #endif
             initReaddata();

@@ -69,9 +69,7 @@ namespace clientForm
 
                 ConfigInfo config = user.GetSave();
                 string reviced = System.IO.Path.Combine(config.Path + "\\" + CurrUser.currUser.ID, fileName);//d:\\
-                //string revicedx = System.IO.Path.Combine("d:\\" + CurrUser.currUser.ID, fileName);//d:\\
-
-
+     
                 stringMsg sm = new stringMsg();
                 sm.name = msgEnum.fileUpload;
                 sm.value.Add("value", reviced);
@@ -80,7 +78,7 @@ namespace clientForm
 
                t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());
 
-                 //zTcpClient1.tcpComm.addSendBle(t2);
+                //zTcpClient1.tcpComm.addSendBle(t2);
 
             }
         }
@@ -90,7 +88,46 @@ namespace clientForm
             zTcpClient1.tcpComm.stop();
         }
 
+        private void listView1_DoubleClick(object sender, EventArgs e)
+        {
+            if (this.listView1.SelectedItems.Count > 0)
+            {
+                string folder = this.listView1.SelectedItems[0].SubItems[0].Text.ToString().Trim();
+                string filepath = this.listView1.SelectedItems[0].SubItems[0].Name.ToString();
+                if (filepath.Length > 0)
+                {
+                    //选中文件 下载
+                    string msg = "确定要下载 " + folder + " 吗？";
+                    if ((int)MessageBox.Show(msg, "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == 1)
+                    {
+                        //下载
+                    }
+                }
+            }
+        }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //下载
+        }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            //刷新列表
+            ResetList();
+        }
+
+        private void ResetList()
+        {
+            this.listView1.Items.Clear();
+            List<DB.FileInfo> list = user.GetFileListByUserId(CurrUser.currUser.ID);
+            foreach (DB.FileInfo item in list)
+            {
+                ListViewItem lvi = new ListViewItem();
+                lvi.Text = item.FileName;
+                lvi.Name = item.FilePath;
+                listView1.Items.Add(lvi);
+            }
+        }
     }
 }

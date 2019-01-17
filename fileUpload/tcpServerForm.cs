@@ -152,7 +152,7 @@ namespace fileUpload
         {
             if (this.listView1.SelectedItems.Count > 0)
             {
-                string folder = this.listView1.SelectedItems[0].SubItems[0].Text.ToString();
+                string folder = this.listView1.SelectedItems[0].SubItems[0].Text.ToString().Trim();
                 string fullPath = (path + "\\" + folder).Replace(System.Environment.NewLine, string.Empty);
                 string filepath = this.listView1.SelectedItems[0].SubItems[0].Name.ToString();
 
@@ -161,19 +161,19 @@ namespace fileUpload
                     //返回上一级
                     ShowFolder();
                 }
-                else if (System.IO.Directory.Exists(fullPath))
+                else if (user.folderList().Contains(folder))
                 {
                     //显示文件
-                    ShowFile(fullPath);
+                    ShowFile(folder);
                 }
                 else if (filepath.Length > 0)
                 {
                     //选中文件 下载
-                    string msg = "确定要下载 " + folder + " 吗？";
-                    if ((int)MessageBox.Show(msg, "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == 1)
-                    {
-                        //下载
-                    }
+                    //string msg = "确定要下载 " + folder + " 吗？";
+                    //if ((int)MessageBox.Show(msg, "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == 1)
+                    //{
+                    //    //下载
+                    //}
                 }
                 else
                 {
@@ -182,71 +182,62 @@ namespace fileUpload
             }
         }
 
-        private void listView1_Click(object sender, EventArgs e)
-        {
-            if (this.listView1.SelectedItems.Count > 0)
-            {
-                string folder = this.listView1.SelectedItems[0].SubItems[0].Text.ToString();
-                string fullPath = (path + "\\" + folder).Replace(System.Environment.NewLine, string.Empty);
-                string filepath = this.listView1.SelectedItems[0].SubItems[0].Name.ToString();
-
-                if (fullPath.Contains("..."))
-                {
-                    //返回上一级
-                    ShowFolder();
-                }
-                else if (System.IO.Directory.Exists(fullPath))
-                {
-                    //显示文件
-                    ShowFile(fullPath);
-                }
-                else if (filepath.Length>0)
-                {
-                    //选中文件
-                    int a = 1;
-                }
-                else
-                {
-                   
-                }
-            }
-        }
 
         //显示文件夹 第一级
         private void ShowFolder()
         {
-            DirectoryInfo root = new DirectoryInfo(path);
             this.listView1.Items.Clear();
-            foreach (DirectoryInfo d in root.GetDirectories())
+            List<string> list = user.folderList();
+            foreach (string item in list)
             {
-                //文件夹
-                string folderName = d.Name;
-                string folderFullName = d.FullName;
                 ListViewItem lvi = new ListViewItem();
-                lvi.Text = folderName;
+                lvi.Text = item;
                 this.listView1.Items.Add(lvi);
             }
+            //DirectoryInfo root = new DirectoryInfo(path);
+            //this.listView1.Items.Clear();
+            //foreach (DirectoryInfo d in root.GetDirectories())
+            //{
+            //    //文件夹
+            //    string folderName = d.Name;
+            //    string folderFullName = d.FullName;
+            //    ListViewItem lvi = new ListViewItem();
+            //    lvi.Text = folderName;
+            //    this.listView1.Items.Add(lvi);
+            //}
         }
 
         //显示文件 第二级
-        private void ShowFile(string fullPath)
+        private void ShowFile(string firstFloor)
         {
             this.listView1.Items.Clear();
-            //文件
-            DirectoryInfo root2 = new DirectoryInfo(fullPath);
             ListViewItem ret = new ListViewItem();
             ret.Text = "...";
             this.listView1.Items.Add(ret);
-            System.IO.FileInfo[] fileinfoList = root2.GetFiles();
-            foreach (System.IO.FileInfo fi in fileinfoList)
+            List<DB.FileInfo> list = user.GetFileList(firstFloor);
+            foreach (DB.FileInfo item in list)
             {
-                string fileName = fi.Name;
-                string filePath = fi.FullName;
                 ListViewItem lvi = new ListViewItem();
-                lvi.Text = fileName;
-                lvi.Name = filePath;
+                lvi.Text = item.FileName;
+                lvi.Name = item.FilePath;
                 this.listView1.Items.Add(lvi);
             }
+
+            //文件
+            //DirectoryInfo root2 = new DirectoryInfo(fullPath);
+            //ListViewItem ret = new ListViewItem();
+            //ret.Text = "...";
+            //this.listView1.Items.Add(ret);
+            //System.IO.FileInfo[] fileinfoList = root2.GetFiles();
+            //foreach (System.IO.FileInfo fi in fileinfoList)
+            //{
+            //    string fileName = fi.Name;
+            //    string filePath = fi.FullName;
+            //    ListViewItem lvi = new ListViewItem();
+            //    lvi.Text = fileName;
+            //    lvi.Name = filePath;
+            //    this.listView1.Items.Add(lvi);
+            //}
         }
 
     }

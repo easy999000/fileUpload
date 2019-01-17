@@ -22,6 +22,12 @@ namespace fileUpload
             InitializeComponent();
         }
 
+        private void seting_Load(object sender, EventArgs e)
+        {
+            DB.ConfigInfo config =user.GetSave();
+            this.textBox5.Text = config.Path;
+        }
+
         private void button3_Click(object sender, EventArgs e)
         {
             if (this.textBox5.Text.Length > 0)
@@ -67,7 +73,6 @@ namespace fileUpload
         //写入文本
         void WriteFile(string str)
         {
-            
             StreamWriter sr;
             if (File.Exists(Common.FILE_NAME)) 
             {
@@ -80,6 +85,7 @@ namespace fileUpload
             sr.WriteLine(str);
             sr.Close();
         }
+
 
     }
 }

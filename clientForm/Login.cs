@@ -20,10 +20,10 @@ namespace clientForm
     public partial class Login : Form
     {
 
-        tools.net.zTcpClient tcpClient ;
+        tools.net.zTcpClient tcpClient;
         Form1 form1;
         UserService user = new UserService();
-        public Login(tools.net.zTcpClient tcpClient1,Form1 f1)
+        public Login(tools.net.zTcpClient tcpClient1, Form1 f1)
         {
             InitializeComponent();
             tcpClient = tcpClient1;
@@ -63,6 +63,9 @@ namespace clientForm
                 //this.Close();
                 RetUser curr = user.Login(textBox1.Text, textBox2.Text);
                 CurrUser.currUser = curr.User;
+
+                // form1.listView1
+                ShowFile(form1.listView1, curr.User.ID);
                 CloseFrom();
             }
             else
@@ -91,6 +94,28 @@ namespace clientForm
             }
 
         }
+
+
+        void ShowFile(ListView listView1, int userId)
+        {
+            if (listView1.InvokeRequired)
+            {
+                this.BeginInvoke(new Action<ListView, int>(ShowFile), listView1, userId);
+            }
+            else
+            {
+                listView1.Items.Clear();
+                List<DB.FileInfo> list = user.GetFileListByUserId(userId);
+                foreach (DB.FileInfo item in list)
+                {
+                    ListViewItem lvi = new ListViewItem();
+                    lvi.Text = item.FileName;
+                    lvi.Name = item.FilePath;
+                    listView1.Items.Add(lvi);
+                }
+            }
+        }
+
 
 
     }

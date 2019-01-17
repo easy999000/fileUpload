@@ -226,7 +226,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 44);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(693, 385);
+            this.tabPage2.Size = new System.Drawing.Size(640, 332);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "文件";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -247,8 +247,8 @@
             this.splitContainer3.Panel2.Controls.Add(this.button4);
             this.splitContainer3.Panel2.Controls.Add(this.button3);
             this.splitContainer3.Panel2.Controls.Add(this.button7);
-            this.splitContainer3.Size = new System.Drawing.Size(687, 379);
-            this.splitContainer3.SplitterDistance = 298;
+            this.splitContainer3.Size = new System.Drawing.Size(634, 326);
+            this.splitContainer3.SplitterDistance = 256;
             this.splitContainer3.TabIndex = 0;
             // 
             // listView1
@@ -256,34 +256,38 @@
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(687, 298);
+            this.listView1.Size = new System.Drawing.Size(634, 256);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.List;
+            this.listView1.DoubleClick += new System.EventHandler(this.listView1_DoubleClick);
             // 
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button4.Location = new System.Drawing.Point(438, 19);
+            this.button4.Location = new System.Drawing.Point(438, 8);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(98, 34);
             this.button4.TabIndex = 10;
             this.button4.Text = "下载文件";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button3.Location = new System.Drawing.Point(334, 19);
+            this.button3.Location = new System.Drawing.Point(334, 8);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(98, 34);
             this.button3.TabIndex = 9;
             this.button3.Text = "刷新列表";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button7
             // 
             this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button7.Location = new System.Drawing.Point(542, 19);
+            this.button7.Location = new System.Drawing.Point(542, 8);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(98, 34);
             this.button7.TabIndex = 8;
@@ -342,9 +346,9 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
+        public System.Windows.Forms.ListView listView1;
     }
 }
 

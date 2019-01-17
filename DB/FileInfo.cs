@@ -19,6 +19,9 @@ namespace DB
         [StringLength(200)]
         public string FileName { get; set; }
 
+        [StringLength(50)]
+        public string FirstFloor { get; set; }
+
         public DateTime? UpLoadTime { get; set; }
 
         public int Download { get; set; }

@@ -48,6 +48,14 @@ namespace DB.Services
                 try
                 {
                     ConfigInfo config = db.ConfigInfo.FirstOrDefault();
+                    if (config == null)
+                    {
+                        config = new ConfigInfo();
+                        config.Effect = "FileSavePath";
+                        config.Path = "D:\\";
+                        config.Remark = "自动生成";
+                        db.SaveChanges();
+                    }
                     return config;
                 }
                 catch (Exception ex)
@@ -62,7 +70,7 @@ namespace DB.Services
         /// </summary>
         /// <param name="newPath"></param>
         /// <returns></returns>
-        public bool EditPath(string  newPath)
+        public bool EditPath(string newPath)
         {
             using (DB db = new DB())
             {
@@ -76,6 +84,63 @@ namespace DB.Services
                 catch (Exception ex)
                 {
                     return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取所有文件夹
+        /// </summary>
+        /// <returns></returns>
+        public List<string> folderList()
+        {
+            using (DB db = new DB())
+            {
+                try
+                {
+                    List<string> str = db.FileInfo.OrderBy(x => x.FirstFloor).Select(x => x.FirstFloor).Distinct().ToList<string>();
+                    return str;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取某层下文件
+        /// </summary>
+        /// <param name="firstFloor"></param>
+        /// <returns></returns>
+        public List<FileInfo> GetFileList(string firstFloor)
+        {
+            using (DB db = new DB())
+            {
+                try
+                {
+                    List<FileInfo> list = db.FileInfo.Where(x => x.FirstFloor == firstFloor).ToList<FileInfo>();
+                    return list;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+        }
+
+        public List<FileInfo> GetFileListByUserId(int userId)
+        {
+            using (DB db = new DB())
+            {
+                try
+                {
+                    List<FileInfo> list = db.FileInfo.Where(x => x.UserId == userId).ToList<FileInfo>();
+                    return list;
+                }
+                catch (Exception ex)
+                {
+                    return null;
                 }
             }
         }

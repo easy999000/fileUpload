@@ -15,6 +15,8 @@ namespace DB
         public virtual DbSet<ConfigInfo> ConfigInfo { get; set; }
         public virtual DbSet<FileInfo> FileInfo { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
+        public virtual DbSet<Log_Operat> Log_Operat { get; set; }
+        public virtual DbSet<Log_Error> Log_Error { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

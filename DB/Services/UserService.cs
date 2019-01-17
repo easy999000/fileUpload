@@ -129,6 +129,12 @@ namespace DB.Services
             }
         }
 
+
+        /// <summary>
+        /// 通过用户id获取文件列表
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public List<FileInfo> GetFileListByUserId(int userId)
         {
             using (DB db = new DB())
@@ -144,6 +150,96 @@ namespace DB.Services
                 }
             }
         }
+
+        /// <summary>
+        /// 添加文件记录到数据库
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="filePath"></param>
+        /// <param name="firstFloor"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public bool AddFileInfo(int userId,string filePath,string firstFloor,string fileName)
+        {
+            using (DB db=new DB())
+            {
+                try
+                {
+                    FileInfo file = new FileInfo();
+                    file.Download = 0;
+                    file.FileName = fileName;
+                    file.FilePath = filePath;
+                    file.FirstFloor = firstFloor;
+                    file.UpLoadTime = DateTime.Now;
+                    file.UserId = userId;
+                    db.FileInfo.Add(file);
+                    db.SaveChanges();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 添加操作日志
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="account"></param>
+        /// <param name="logContent"></param>
+        /// <returns></returns>
+        public void Add_Log_Opera(int userID,string account,string logContent)
+        {
+            using (DB db = new DB())
+            {
+                try
+                {
+                    Log_Operat log = new Log_Operat();
+                    log.OperatorId = userID;
+                    log.Account = account;
+                    log.LogContent = logContent;
+                    log.OperatTime = DateTime.Now;
+                    db.Log_Operat.Add(log);
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 添加错误日志
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="account"></param>
+        /// <param name="logContent"></param>
+        /// <returns></returns>
+        public void Add_Log_Error(int userID, string account, string logContent)
+        {
+            using (DB db = new DB())
+            {
+                try
+                {
+                    Log_Error log = new Log_Error();
+                    log.OperatorId = userID;
+                    log.Account = account;
+                    log.ErrorContent = logContent;
+                    log.ErrorTime = DateTime.Now;
+                    db.Log_Error.Add(log);
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+        }
+
+
 
     }
 

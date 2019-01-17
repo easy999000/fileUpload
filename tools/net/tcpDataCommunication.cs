@@ -127,7 +127,9 @@ namespace tools.net
 
                     //  dataPro.readData(bs, count);
                     readData(bs, count);
+#if DEBUG
                     tools.log.writeLog("try:第{0}次",  c.ToString());
+#endif
                 }
                 catch (NotSupportedException ex1)
                 {
@@ -291,7 +293,6 @@ namespace tools.net
         void successData()
         {
 #if DEBUG
-            Console.WriteLine("test");
             Console.WriteLine(ble.ToString());
 #endif
             initReaddata();

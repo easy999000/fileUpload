@@ -6,7 +6,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Security;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -71,14 +75,15 @@ namespace clientForm
                 string reviced = System.IO.Path.Combine(config.Path + "\\" + CurrUser.currUser.ID, fileName);//d:\\
                 stringMsg sm = new stringMsg();
                 sm.name = msgEnum.fileUpload;
-                sm.value.Add("value", reviced);
-                sm.value.Add("UserId", CurrUser.currUser.ID.ToString());
-                sm.value.Add("FirstFloor", CurrUser.currUser.ID.ToString());
-                sm.value.Add("FileName", fileName);
-                sm.value.Add("FirstFloorDir", config.Path + "\\" + CurrUser.currUser.ID);
+                sm.value.Add("value", reviced);//全路径
+                sm.value.Add("UserId", CurrUser.currUser.ID.ToString());//用户id
+                sm.value.Add("FirstFloor", CurrUser.currUser.ID.ToString());//用户专属文件夹
+                sm.value.Add("FileName", fileName);//文件名称
+                sm.value.Add("FirstFloorDir", config.Path + "\\" + CurrUser.currUser.ID);//文件存储路径
                 t2.ReceiveFullMsg = sm.modelToJson();
 
-               t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());
+                t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());
+
 
                 //zTcpClient1.tcpComm.addSendBle(t2);
 
@@ -102,12 +107,53 @@ namespace clientForm
                     string msg = "确定要下载 " + folder + " 吗？";
                     if ((int)MessageBox.Show(msg, "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == 1)
                     {
-                        //下载
+                        FolderBrowserDialog saveFolder = new FolderBrowserDialog();
+                        saveFolder.Description = "选择文件保存目录";
+                        if (saveFolder.ShowDialog() == DialogResult.OK)
+                        {
+                            try
+                            {
+                                //下载
+                                string path = saveFolder.SelectedPath;
+                                WebClient myWebClient = new WebClient();
+                                byte[] data = myWebClient.DownloadData(filepath);
+                                string endPath = path + "\\" + CheckFileName(path, folder);//含重名验证,如重名覆盖则改成:path+"\\"+folder
+                                FileStream fs = new FileStream(endPath, FileMode.Create);
+                                fs.Write(data, 0, data.Length);
+                                fs.Close();
+                            }
+                            catch (Exception ex)
+                            {
+                                tools.log.writeLog("DownloadDataException:{0},文件信息:{1}", ex.Message, filepath);
+                            }
+                        }
                     }
                 }
             }
         }
-
+        /// <summary>
+        /// 文件重名验证
+        /// </summary>
+        /// <param name="path">文件路径(不含文件名)</param>
+        /// <param name="filename">文件名</param>
+        /// <param name="index">不用传</param>
+        /// <returns></returns>
+        private string CheckFileName(string path, string filename, int index=1)
+        {
+            string newfilename = filename;
+            if (File.Exists(path + "\\" + filename))
+            {
+                string name = filename.Substring(0, filename.IndexOf('.'));
+                string suffix = filename.Substring(filename.IndexOf('.'), filename.Length - filename.IndexOf('.'));
+                newfilename = name + "(" + index + ")" + suffix;
+                if (File.Exists(path + "\\" + newfilename))
+                {
+                    index++;
+                    newfilename = CheckFileName(path, filename, index);
+                }
+            }
+            return newfilename;
+        }
         private void button4_Click(object sender, EventArgs e)
         {
             //下载

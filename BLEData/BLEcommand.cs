@@ -20,7 +20,7 @@ namespace BLE
         /// <summary>
         /// 发送文件
         /// </summary>
-        t12, 
+        t12=12, 
 
 
 

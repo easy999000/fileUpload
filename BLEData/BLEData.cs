@@ -363,6 +363,7 @@ namespace BLE
             headByte.Clear();
             allDataLength = 0;
             currentPosition = -1;
+             
         }
         /// <summary>
         /// 成功收到格式正确的消息

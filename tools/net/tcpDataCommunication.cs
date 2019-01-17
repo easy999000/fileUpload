@@ -98,7 +98,7 @@ namespace tools.net
         {
 
             NetworkStream stream1 = tcpClient1.GetStream();
-
+            int c = 0;
             // stream1.
 
 #if DEBUG
@@ -107,6 +107,7 @@ namespace tools.net
 #endif
             while (true)
             {
+                c++;
                 try
                 {
                     byte[] bs = new byte[256];
@@ -114,7 +115,7 @@ namespace tools.net
 
                     //  dataPro.readData(bs, count);
                     readData(bs, count);
-
+                    tools.log.writeLog("try:第{0}次",  c.ToString());
                 }
                 catch (NotSupportedException ex1)
                 {
@@ -122,11 +123,13 @@ namespace tools.net
                 }
                 catch (ObjectDisposedException ex2)
                 {
-                    connectionDisconnection();
+                    tools.log.writeLog("ObjectDisposedException:{0},第{1}次", ex2.Message,c.ToString());
+                    //connectionDisconnection();
                 }
                 catch (IOException ex3)
                 {
-                    connectionDisconnection();
+                    tools.log.writeLog("IOException:{0},第{1}次", ex3.Message, c.ToString());
+                    //connectionDisconnection();
                 }
                 catch (System.Threading.ThreadAbortException ex)
                 {

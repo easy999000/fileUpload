@@ -97,6 +97,60 @@ namespace clientForm
 
         private void listView1_DoubleClick(object sender, EventArgs e)
         {
+            DownLand();
+        }
+
+
+        /// <summary>
+        /// 文件重名验证
+        /// </summary>
+        /// <param name="path">文件路径(不含文件名)</param>
+        /// <param name="filename">文件名</param>
+        /// <param name="index">不用传</param>
+        /// <returns></returns>
+        private string CheckFileName(string path, string filename, int index = 1)
+        {
+            string newfilename = filename;
+            if (File.Exists(path + "\\" + filename))
+            {
+                string name = filename.Substring(0, filename.IndexOf('.'));
+                string suffix = filename.Substring(filename.IndexOf('.'), filename.Length - filename.IndexOf('.'));
+                newfilename = name + "(" + index + ")" + suffix;
+                if (File.Exists(path + "\\" + newfilename))
+                {
+                    index++;
+                    newfilename = CheckFileName(path, filename, index);
+                }
+            }
+            return newfilename;
+        }
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //下载
+            DownLand();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            //刷新列表
+            ResetList();
+        }
+
+        private void ResetList()
+        {
+            this.listView1.Items.Clear();
+            List<DB.FileInfo> list = user.GetFileListByUserId(CurrUser.currUser.ID);
+            foreach (DB.FileInfo item in list)
+            {
+                ListViewItem lvi = new ListViewItem();
+                lvi.Text = item.FileName;
+                lvi.Name = item.FilePath;
+                listView1.Items.Add(lvi);
+            }
+        }
+
+        private void DownLand()
+        {
             if (this.listView1.SelectedItems.Count > 0)
             {
                 string folder = this.listView1.SelectedItems[0].SubItems[0].Text.ToString().Trim();
@@ -116,11 +170,22 @@ namespace clientForm
                                 //下载
                                 string path = saveFolder.SelectedPath;
                                 WebClient myWebClient = new WebClient();
-                                byte[] data = myWebClient.DownloadData(filepath);
-                                string endPath = path + "\\" + CheckFileName(path, folder);//含重名验证,如重名覆盖则改成:path+"\\"+folder
-                                FileStream fs = new FileStream(endPath, FileMode.Create);
-                                fs.Write(data, 0, data.Length);
-                                fs.Close();
+
+                                if (File.Exists(filepath))
+                                {
+                                    byte[] data = myWebClient.DownloadData(filepath);
+                                    string endPath = path + "\\" + CheckFileName(path, folder);//含重名验证,如重名覆盖则改成:path+"\\"+folder
+                                    FileStream fs = new FileStream(endPath, FileMode.Create);
+                                    fs.Write(data, 0, data.Length);
+                                    fs.Close();
+                                    MessageBox.Show("下载成功！", "提示");
+                                    user.Add_Log_Opera(CurrUser.currUser.ID, CurrUser.currUser.Account, string.Format("下载文件{0}", folder));
+                                }
+                                else
+                                {
+                                    MessageBox.Show("文件不存在！", "提示");
+                                    user.Add_Log_Error(CurrUser.currUser.ID, CurrUser.currUser.Account, string.Format("下载文件{0}出现问题", folder));
+                                }
                             }
                             catch (Exception ex)
                             {
@@ -129,52 +194,6 @@ namespace clientForm
                         }
                     }
                 }
-            }
-        }
-        /// <summary>
-        /// 文件重名验证
-        /// </summary>
-        /// <param name="path">文件路径(不含文件名)</param>
-        /// <param name="filename">文件名</param>
-        /// <param name="index">不用传</param>
-        /// <returns></returns>
-        private string CheckFileName(string path, string filename, int index=1)
-        {
-            string newfilename = filename;
-            if (File.Exists(path + "\\" + filename))
-            {
-                string name = filename.Substring(0, filename.IndexOf('.'));
-                string suffix = filename.Substring(filename.IndexOf('.'), filename.Length - filename.IndexOf('.'));
-                newfilename = name + "(" + index + ")" + suffix;
-                if (File.Exists(path + "\\" + newfilename))
-                {
-                    index++;
-                    newfilename = CheckFileName(path, filename, index);
-                }
-            }
-            return newfilename;
-        }
-        private void button4_Click(object sender, EventArgs e)
-        {
-            //下载
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            //刷新列表
-            ResetList();
-        }
-
-        private void ResetList()
-        {
-            this.listView1.Items.Clear();
-            List<DB.FileInfo> list = user.GetFileListByUserId(CurrUser.currUser.ID);
-            foreach (DB.FileInfo item in list)
-            {
-                ListViewItem lvi = new ListViewItem();
-                lvi.Text = item.FileName;
-                lvi.Name = item.FilePath;
-                listView1.Items.Add(lvi);
             }
         }
     }

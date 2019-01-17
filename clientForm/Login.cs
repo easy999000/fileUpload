@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using DB.Services;
 using fileUpload;
+using System.Diagnostics;
 
 namespace clientForm
 {
@@ -59,14 +60,20 @@ namespace clientForm
             bool bl = Convert.ToBoolean(jo["value"]["return"]);
             if (bl)
             {
+                Stopwatch st = new Stopwatch();
+                st.Start();
 
                 RetUser curr = user.Login(textBox1.Text, textBox2.Text);
-                CurrUser.currUser = curr.User;
+                st.Stop();
+            
+            
                 ShowFile(form1.listView1, curr.User.ID);
+            
 
-                MessageBox.Show("登陆成功!");
+                MessageBox.Show(string.Format("登陆成功!{0}", st.ElapsedMilliseconds.ToString()));
 
                 CloseFrom();
+
             }
             else
             {

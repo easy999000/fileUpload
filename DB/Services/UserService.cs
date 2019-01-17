@@ -159,9 +159,9 @@ namespace DB.Services
         /// <param name="firstFloor"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public bool AddFileInfo(int userId,string filePath,string firstFloor,string fileName)
+        public bool AddFileInfo(int userId, string filePath, string firstFloor, string fileName)
         {
-            using (DB db=new DB())
+            using (DB db = new DB())
             {
                 try
                 {
@@ -191,7 +191,7 @@ namespace DB.Services
         /// <param name="account"></param>
         /// <param name="logContent"></param>
         /// <returns></returns>
-        public void Add_Log_Opera(int userID,string account,string logContent)
+        public void Add_Log_Opera(int userID, string account, string logContent)
         {
             using (DB db = new DB())
             {

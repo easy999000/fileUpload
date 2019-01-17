@@ -99,9 +99,6 @@ namespace fileUpload
             string account = msg.value["account"];
             string pwd = msg.value["pwd"];
             RetUser curr = user.Login(account, pwd);
-
-
-
             if (curr.Success)
             {
                 if (Common.tcpList == null)

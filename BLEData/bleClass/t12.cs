@@ -162,7 +162,14 @@ namespace BLE.bleClass
 
                         try
                         {
-                            string rfmPath= stringMsg.jsonToModel(pathJson).value["value"];
+                            string dir = stringMsg.jsonToModel(pathJson).value["FirstFloorDir"];
+                            if (!Directory.Exists(dir))
+                            {
+                                Directory.CreateDirectory(dir);
+                            }
+
+
+                            string rfmPath = stringMsg.jsonToModel(pathJson).value["value"];
                             fileWrite = System.IO.File.Create(rfmPath);//ReceiveFullMsg
                         }
                         #region 创建文件异常处理

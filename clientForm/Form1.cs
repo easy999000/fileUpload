@@ -69,11 +69,13 @@ namespace clientForm
 
                 ConfigInfo config = user.GetSave();
                 string reviced = System.IO.Path.Combine(config.Path + "\\" + CurrUser.currUser.ID, fileName);//d:\\
-     
                 stringMsg sm = new stringMsg();
                 sm.name = msgEnum.fileUpload;
                 sm.value.Add("value", reviced);
-
+                sm.value.Add("UserId", CurrUser.currUser.ID.ToString());
+                sm.value.Add("FirstFloor", CurrUser.currUser.ID.ToString());
+                sm.value.Add("FileName", fileName);
+                sm.value.Add("FirstFloorDir", config.Path + "\\" + CurrUser.currUser.ID);
                 t2.ReceiveFullMsg = sm.modelToJson();
 
                t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());

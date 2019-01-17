@@ -85,6 +85,14 @@ namespace fileUpload
             string firstFloor = msg.value["FirstFloor"];
             string fileName = msg.value["FileName"];
             bool bl = user.AddFileInfo(userId, filePath, firstFloor, fileName);
+            if (bl)
+            {
+                user.Add_Log_Opera(userId, "", string.Format("上传文件{0}", fileName));
+            }
+            else
+            {
+                user.Add_Log_Error(userId, "", string.Format("上传文件{0}出现问题", fileName));
+            }
             return bl;
         }
 

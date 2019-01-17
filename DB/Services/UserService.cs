@@ -191,24 +191,22 @@ namespace DB.Services
         /// <param name="account"></param>
         /// <param name="logContent"></param>
         /// <returns></returns>
-        public void Add_Log_Opera(string userID,string account,string logContent)
+        public void Add_Log_Opera(int userID,string account,string logContent)
         {
             using (DB db = new DB())
             {
                 try
                 {
                     Log_Operat log = new Log_Operat();
-                    log.OperatorId = int.Parse(userID);
+                    log.OperatorId = userID;
                     log.Account = account;
                     log.LogContent = logContent;
                     log.OperatTime = DateTime.Now;
                     db.Log_Operat.Add(log);
                     db.SaveChanges();
-                    return true;
                 }
                 catch (Exception ex)
                 {
-                    return false;
                 }
             }
         }
@@ -221,24 +219,22 @@ namespace DB.Services
         /// <param name="account"></param>
         /// <param name="logContent"></param>
         /// <returns></returns>
-        public void Add_Log_Error(string userID, string account, string logContent)
+        public void Add_Log_Error(int userID, string account, string logContent)
         {
             using (DB db = new DB())
             {
                 try
                 {
                     Log_Error log = new Log_Error();
-                    log.OperatorId = int.Parse(userID);
+                    log.OperatorId = userID;
                     log.Account = account;
                     log.ErrorContent = logContent;
                     log.ErrorTime = DateTime.Now;
                     db.Log_Error.Add(log);
                     db.SaveChanges();
-                    return true;
                 }
                 catch (Exception ex)
                 {
-                    return false;
                 }
             }
         }

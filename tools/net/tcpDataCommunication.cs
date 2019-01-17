@@ -79,6 +79,12 @@ namespace tools.net
 
             //readByte(null);
 
+            thSending = new System.Threading.Thread(thSend);
+
+            thSending.IsBackground = true;
+
+            thSending.Start();
+
             thReading = new System.Threading.Thread(readByte);
 
             thReading.IsBackground = true;

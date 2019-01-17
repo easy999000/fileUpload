@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 namespace BLE
 {
     public class dataMessage
-    {
+    { 
     }
 }

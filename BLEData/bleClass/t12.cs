@@ -69,7 +69,7 @@ namespace BLE.bleClass
             filePathByte.Clear();
             if (fileWrite != null)
             {
-                fileWrite.Flush();
+                //fileWrite.Flush();
                 fileWrite.Close();
             }
         }

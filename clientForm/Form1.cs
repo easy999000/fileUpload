@@ -53,6 +53,8 @@ namespace clientForm
             m1.value.Add("value", this.richTextBox2.Text);
 
             zTcpClient1.tcpComm.sendData(m1);
+
+
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -76,9 +78,9 @@ namespace clientForm
 
                 t2.ReceiveFullMsg = sm.modelToJson();
 
-                t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());
+               t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());
 
-                //zTcpClient1.tcpComm.sendData(sm);
+                 //zTcpClient1.tcpComm.addSendBle(t2);
 
             }
         }

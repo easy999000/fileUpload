@@ -82,7 +82,6 @@ namespace tools.net
             }
             else if (ble.command == BLEcommand.t12)
             {
-                s1 = ((BLE.bleClass.t12)ble).modelToJson();
                 s1 = ((BLE.bleClass.t12)ble).ReceiveFullMsg;
             }
             stringMsg m2 = stringMsg.jsonToModel(s1);

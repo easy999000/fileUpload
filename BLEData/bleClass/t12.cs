@@ -156,9 +156,9 @@ namespace BLE.bleClass
                         filePathByte.Add(b);
                         string pathJson = getString(filePathByte.ToArray());
 
-                        stringMsg sm = stringMsg.jsonToModel(pathJson);
+                       // stringMsg sm = stringMsg.jsonToModel(pathJson);
 
-                        this.ReceiveFullMsg = sm.value["value"];
+                        this.ReceiveFullMsg = pathJson;
 
                         try
                         {

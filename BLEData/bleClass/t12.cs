@@ -65,6 +65,8 @@ namespace BLE.bleClass
             base.initReaddata();
             msgByteLength = 0;
             msgByteLengthByte.Clear();
+            fileDataLength = 0;
+            filePathByte.Clear();
             if (fileWrite != null)
             {
                 fileWrite.Flush();
@@ -230,7 +232,7 @@ namespace BLE.bleClass
             return this.ReceiveFullMsg;
         }
 
-
+       
         #endregion
 
         #region 发送

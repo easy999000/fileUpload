@@ -59,13 +59,13 @@ namespace clientForm
             bool bl = Convert.ToBoolean(jo["value"]["return"]);
             if (bl)
             {
-                MessageBox.Show("登陆成功!");
-                //this.Close();
+
                 RetUser curr = user.Login(textBox1.Text, textBox2.Text);
                 CurrUser.currUser = curr.User;
-
-                // form1.listView1
                 ShowFile(form1.listView1, curr.User.ID);
+
+                MessageBox.Show("登陆成功!");
+
                 CloseFrom();
             }
             else
@@ -116,7 +116,6 @@ namespace clientForm
             }
         }
 
-
-
+ 
     }
 }

@@ -35,6 +35,10 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.序号 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.姓名 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.地址 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.状态 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -54,10 +58,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.序号 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.姓名 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.地址 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.状态 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -156,6 +156,34 @@
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.Size = new System.Drawing.Size(354, 341);
             this.dataGridView1.TabIndex = 0;
+            // 
+            // 序号
+            // 
+            this.序号.DataPropertyName = "ID";
+            this.序号.HeaderText = "序号";
+            this.序号.Name = "序号";
+            this.序号.ReadOnly = true;
+            // 
+            // 姓名
+            // 
+            this.姓名.DataPropertyName = "Name";
+            this.姓名.HeaderText = "姓名";
+            this.姓名.Name = "姓名";
+            this.姓名.ReadOnly = true;
+            // 
+            // 地址
+            // 
+            this.地址.DataPropertyName = "Address";
+            this.地址.HeaderText = "地址";
+            this.地址.Name = "地址";
+            this.地址.ReadOnly = true;
+            // 
+            // 状态
+            // 
+            this.状态.DataPropertyName = "State";
+            this.状态.HeaderText = "状态";
+            this.状态.Name = "状态";
+            this.状态.ReadOnly = true;
             // 
             // tabControl1
             // 
@@ -283,6 +311,7 @@
             // listView1
             // 
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView1.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.listView1.FullRowSelect = true;
             this.listView1.Location = new System.Drawing.Point(3, 3);
             this.listView1.Name = "listView1";
@@ -354,34 +383,6 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(901, 403);
             this.panel4.TabIndex = 2;
-            // 
-            // 序号
-            // 
-            this.序号.DataPropertyName = "ID";
-            this.序号.HeaderText = "序号";
-            this.序号.Name = "序号";
-            this.序号.ReadOnly = true;
-            // 
-            // 姓名
-            // 
-            this.姓名.DataPropertyName = "Name";
-            this.姓名.HeaderText = "姓名";
-            this.姓名.Name = "姓名";
-            this.姓名.ReadOnly = true;
-            // 
-            // 地址
-            // 
-            this.地址.DataPropertyName = "Address";
-            this.地址.HeaderText = "地址";
-            this.地址.Name = "地址";
-            this.地址.ReadOnly = true;
-            // 
-            // 状态
-            // 
-            this.状态.DataPropertyName = "State";
-            this.状态.HeaderText = "状态";
-            this.状态.Name = "状态";
-            this.状态.ReadOnly = true;
             // 
             // tcpServerForm
             // 

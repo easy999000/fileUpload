@@ -40,11 +40,7 @@ namespace clientForm
             }
             int port;
             b = int.TryParse(textBox2.Text, out port);
-
-
             zTcpClient1.Connect(new System.Net.IPEndPoint(ip, port));
-
-
             Login login = new clientForm.Login(zTcpClient1, this);
             login.Show();
 
@@ -70,7 +66,6 @@ namespace clientForm
 
                 string fileName = System.IO.Path.GetFileName(t2.sendFileFullPath);
 
-
                 ConfigInfo config = user.GetSave();
                 string reviced = System.IO.Path.Combine(config.Path + "\\" + CurrUser.currUser.ID, fileName);//d:\\
                 stringMsg sm = new stringMsg();
@@ -83,10 +78,7 @@ namespace clientForm
                 t2.ReceiveFullMsg = sm.modelToJson();
 
                 t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());
-
-
                 //zTcpClient1.tcpComm.addSendBle(t2);
-
             }
         }
         //停止连接

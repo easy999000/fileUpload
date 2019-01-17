@@ -183,6 +183,25 @@ namespace DB.Services
             }
         }
 
+
+        public bool Add_Log_Error()
+        {
+            using (DB db = new DB())
+            {
+                try
+                {
+
+                    db.SaveChanges();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+        }
+
+
     }
 
 

@@ -15,9 +15,6 @@ namespace DB
         public string Account { get; set; }
 
         [StringLength(50)]
-        public string UserName { get; set; } 
-
-        [StringLength(50)]
         public string PWD { get; set; }
     }
 }

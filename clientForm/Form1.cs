@@ -222,7 +222,11 @@ namespace clientForm
                     bool bl = Convert.ToBoolean(msg.value["return"]);
                     if (bl)
                     {
-                        RetUser curr = user.Login(login.textBox1.Text, login.textBox2.Text);
+                        
+             
+                        RetUser curr = JsonConvert.DeserializeObject<RetUser>(msg.value["jsonCurr"]);
+                        //RetUser curr = user.Login(login.textBox1.Text, login.textBox2.Text);
+                        CurrUser.currUser = curr.User;
                         ShowFile(curr.User.ID);
                         MessageBox.Show(string.Format("登陆成功!"));
                         CloseFrom(login);

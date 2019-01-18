@@ -155,6 +155,7 @@ namespace clientForm
                 for (int i = 0; i < currentSendBleData.Count; i++)
                 {
                     BLEData t12_wait = (BLEData)currentSendBleData[i];
+
                     stringMsg msg_wait = stringMsg.jsonToModel(t12_wait.ToString());
                     string fName_wait = msg_wait.value["FileName"];
                     ListViewItem lvi_wait = new ListViewItem();

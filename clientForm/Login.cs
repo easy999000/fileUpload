@@ -55,26 +55,17 @@ namespace clientForm
             string jsonText = ((BLE.bleClass.t11)ble).msg;
             JObject jo = (JObject)JsonConvert.DeserializeObject(jsonText);
 
-
-
             bool bl = Convert.ToBoolean(jo["value"]["return"]);
+            int userID = Convert.ToInt32(jo["value"]["ID"]);
+            string jsonCurr = jo["value"]["jsonCurr"].ToString();
+            RetUser curr = JsonConvert.DeserializeObject<RetUser>(jsonCurr);
+            CurrUser.currUser = curr.User;
+
             if (bl)
             {
-                Stopwatch st = new Stopwatch();
-                st.Start();
-
-                RetUser curr = user.Login(textBox1.Text, textBox2.Text);
-                st.Stop();
-
-
-                Stopwatch st1 = new Stopwatch();
-                st1.Start();
-                ShowFile(form1.listView1, curr.User.ID);
-                st1.Stop();
-
-                MessageBox.Show(string.Format("登陆成功!{0},{1}", st.ElapsedMilliseconds.ToString(),st1.ElapsedMilliseconds.ToString()));
-
+                MessageBox.Show(string.Format("登陆成功!"));
                 CloseFrom();
+                ShowFile(form1.listView1, userID);
 
             }
             else
@@ -101,7 +92,6 @@ namespace clientForm
             {
                 this.Close();
             }
-
         }
 
 

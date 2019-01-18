@@ -166,7 +166,8 @@ namespace clientForm
                                 if (File.Exists(filepath))
                                 {
                                     byte[] data = myWebClient.DownloadData(filepath);
-                                    string endPath = path + "\\" + CheckFileName(path, folder);//含重名验证,如重名覆盖则改成:path+"\\"+folder
+                                    //string endPath = path + "\\" + CheckFileName(path, folder);//含重名验证,如重名覆盖则改成:path+"\\"+folder
+                                    string endPath = path + "\\" + folder;//含重名验证,如重名覆盖则改成:path+"\\"+folder
                                     FileStream fs = new FileStream(endPath, FileMode.Create);
                                     fs.Write(data, 0, data.Length);
                                     fs.Close();
@@ -177,11 +178,12 @@ namespace clientForm
                                 else
                                 {
                                     MessageBox.Show("文件不存在！", "提示");
-                                    user.Add_Log_Error(CurrUser.currUser.ID, CurrUser.currUser.Account, string.Format("下载文件{0}出现问题", folder));
+                                    //user.Add_Log_Error(CurrUser.currUser.ID, CurrUser.currUser.Account, string.Format("下载文件{0}出现问题:文件不存在", folder));
                                 }
                             }
                             catch (Exception ex)
                             {
+                                user.Add_Log_Error(CurrUser.currUser.ID, CurrUser.currUser.Account, string.Format("下载文件{0}出现问题:{1}", folder, ex.Message));
                                 tools.log.writeLog("DownloadDataException:{0},文件信息:{1}", ex.Message, filepath);
                             }
                         }

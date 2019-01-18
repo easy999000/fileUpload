@@ -36,7 +36,7 @@ namespace BLE
         /// </summary>
         readonly BLEcommand _command;
 
-
+        public int currProgress { get; set; }
 
         /// <summary>
         /// 命令

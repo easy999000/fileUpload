@@ -48,6 +48,8 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.listView2 = new System.Windows.Forms.ListView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -63,6 +65,7 @@
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -149,6 +152,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tabControl1.ItemSize = new System.Drawing.Size(100, 40);
@@ -299,6 +303,26 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.listView2);
+            this.tabPage3.Location = new System.Drawing.Point(4, 44);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(638, 297);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "传输列表";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // listView2
+            // 
+            this.listView2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView2.Location = new System.Drawing.Point(3, 3);
+            this.listView2.Name = "listView2";
+            this.listView2.Size = new System.Drawing.Size(632, 291);
+            this.listView2.TabIndex = 0;
+            this.listView2.UseCompatibleStateImageBehavior = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -323,6 +347,7 @@
             this.splitContainer3.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -349,6 +374,8 @@
         private System.Windows.Forms.Button button4;
         public System.Windows.Forms.ListView listView1;
         public System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.ListView listView2;
     }
 }
 

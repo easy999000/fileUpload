@@ -156,7 +156,7 @@ namespace BLE.bleClass
                         filePathByte.Add(b);
                         string pathJson = getString(filePathByte.ToArray());
 
-                       // stringMsg sm = stringMsg.jsonToModel(pathJson);
+                        // stringMsg sm = stringMsg.jsonToModel(pathJson);
 
                         this.ReceiveFullMsg = pathJson;
 
@@ -240,10 +240,12 @@ namespace BLE.bleClass
             return this.ReceiveFullMsg;
         }
 
-       
+
         #endregion
 
         #region 发送
+        
+
         public override byte[] toBleByte()
         {
             return base.toBleByte();
@@ -286,7 +288,23 @@ namespace BLE.bleClass
             sr.Write(messageData[1], 0, messageData[1].Count());
             sr.Write(messageData[2], 0, messageData[2].Count());
 
-            fileStream.CopyTo(sr);
+            //fileStream.CopyTo(sr);
+            byte[] bytes = new byte[128];
+            int num = 0;
+            while (true)
+            {
+                // byte[] srByte = StreamToBytes(sr, num);
+
+                int n = fileStream.Read(bytes, 0, 128);
+                if (n == 0)
+                {
+                    break;
+                }
+                sr.Write(bytes, 0, n);
+                num++;
+
+                currProgress = num / Convert.ToInt32(fileStream.Length / 128 + 1) * 100;
+            }
 
             fileStream.Close();
             //}
@@ -297,6 +315,7 @@ namespace BLE.bleClass
             //    string y = x;
             //}
         }
+
         public System.IO.Stream toBleStream()
         {
             MemoryStream ms = new MemoryStream();

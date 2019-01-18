@@ -19,7 +19,7 @@ namespace tools.net
 
         public List<BLE.BLEData> GetSendFileList()
         {
-            return null;
+            return DataQueue.GetSendFileList();
         }
         /// <summary>
         /// 包含元素的数量

@@ -61,6 +61,11 @@ namespace tools.net
         /// 发送线程
         /// </summary>
         System.Threading.Thread thSending;
+
+        /// <summary>
+        /// 当前正在发送的对象。
+        /// </summary>
+        public BLEData currentSendBleData;
         #endregion
 
         /////要测试的几个问题,可不可以同时进行读写.可不可以一个tcp类,get多个流进行读写.多个流是不是一个实例.,可不可以多线程读写.
@@ -142,7 +147,7 @@ namespace tools.net
                 catch (ObjectDisposedException ex2)
                 {
                     whileSwitch = false;
-                    tools.log.writeLog("ObjectDisposedException:{0},第{1}次", ex2.Message,c.ToString());
+                    tools.log.writeLog("ObjectDisposedException:{0},第{1}次", ex2.Message, c.ToString());
                     connectionDisconnection();
                 }
                 catch (IOException ex3)
@@ -179,7 +184,7 @@ namespace tools.net
             int writeRet = -1;
             for (int i = 0; i < count; i++)
             {
-              
+
                 byte b = tcpByte[i];
 
                 switch (currentPosition)
@@ -217,12 +222,12 @@ namespace tools.net
                             errorData();
                             break;
                         }
-                        if (!b.ToString().Equals("11")&& !b.ToString().Equals("12"))
+                        if (!b.ToString().Equals("11") && !b.ToString().Equals("12"))
                         {
                             errorData();
                             break;
                         }
-                      
+
                         data.Add(b);
                         ble = BLEData.CreateBle(b1);
                         currentPosition++;
@@ -246,7 +251,7 @@ namespace tools.net
 
                             dataLength = BLEData.byteToInt64(data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]);
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             tools.log.writeLog("readData:第{0}次,错误:{1}", i.ToString(), ex.Message);
                             errorData();
@@ -331,7 +336,7 @@ namespace tools.net
             System.Net.Sockets.NetworkStream ns = tcpClient1.GetStream();
             byte[] bs = new byte[128];
             int num = 0;
-          //  sr.Position = 0;
+            //  sr.Position = 0;
             while (sr.CanRead)
             {
                 num = sr.Read(bs, 0, bs.Length);
@@ -419,7 +424,7 @@ namespace tools.net
             }
         }
 
-        public void  addSendBle(BLEData ble)
+        public void addSendBle(BLEData ble)
         {
             this.DataQueue.Enqueue(ble);
             sendFileList = this.DataQueue.GetSendFileList();
@@ -441,23 +446,24 @@ namespace tools.net
                 try
                 {
 
-                    BLEData bleData = this.DataQueue.Dequeue();
-                    if (bleData == null)
+                    currentSendBleData = this.DataQueue.Dequeue();
+                    if (currentSendBleData == null)
                     {
                         continue;
                     }
 #if DEBUG
                     //   tools.log.writeLog("tcpDataProcessingControl.tcpDataProcessing 线程:{0},取到了一条数据", System.Threading.Thread.CurrentThread.ManagedThreadId);
 #endif
-                    if (bleData.command == BLEcommand.t12)
+                    if (currentSendBleData.command == BLEcommand.t12)
                     {
-                        bleData.toBleStream(this.sendDataGetStream());
+                        currentSendBleData.toBleStream(this.sendDataGetStream());
 
                     }
                     else
                     {
-                        sendData(bleData);
-                    } 
+                        sendData(currentSendBleData);
+                    }
+                    currentSendBleData = null;
 
                 }
                 catch (NotSupportedException ex1)

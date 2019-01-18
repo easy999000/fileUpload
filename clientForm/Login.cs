@@ -33,7 +33,7 @@ namespace clientForm
 
         private void Login_Load(object sender, EventArgs e)
         {
-            tcpClient.tcpComm.newBleMessageEvent += newBlemessageEventFun;
+            //tcpClient.tcpComm.newBleMessageEvent += newBlemessageEventFun;
         }
         //登陆
         private void button1_Click(object sender, EventArgs e)
@@ -50,40 +50,57 @@ namespace clientForm
         }
 
 
-        void newBlemessageEventFun(tcpDataCommunication tcpComm, BLEData ble)
-        {
-            string jsonText = ((BLE.bleClass.t11)ble).msg;
-            JObject jo = (JObject)JsonConvert.DeserializeObject(jsonText);
+        //void newBlemessageEventFun(tcpDataCommunication tcpComm, BLEData ble)
+        //{
+        //    //string jsonText = ((BLE.bleClass.t11)ble).msg;
+        //    //JObject jo = (JObject)JsonConvert.DeserializeObject(jsonText);
+
+        //    BLE.bleClass.t11 t11 = (BLE.bleClass.t11)ble;
+        //    stringMsg msg = stringMsg.jsonToModel(t11.msg);
+
+
+        //    switch (msg.name)
+        //    {
+        //        case msgEnum.dengru:
+        //            //bool bl = Convert.ToBoolean(jo["value"]["return"]);
+        //            bool bl = Convert.ToBoolean(msg.value["return"]);
+        //            if (bl)
+        //            {
+        //                Stopwatch st = new Stopwatch();
+        //                st.Start();
+
+        //                RetUser curr = user.Login(textBox1.Text, textBox2.Text);
+        //                st.Stop();
+
+
+        //                Stopwatch st1 = new Stopwatch();
+        //                st1.Start();
+        //                ShowFile(form1.listView1, curr.User.ID);
+        //                st1.Stop();
+
+        //                MessageBox.Show(string.Format("登陆成功!{0},{1}", st.ElapsedMilliseconds.ToString(), st1.ElapsedMilliseconds.ToString()));
+
+        //                CloseFrom();
+
+        //            }
+        //            else
+        //            {
+        //                tcpClient.tcpComm.stop();
+        //                MessageBox.Show("账号或密码错误!");
+        //            }
+        //            break;
+        //        case msgEnum.liaotian:
+        //            //string groupSendingMsg = jo["value"]["groupSending"].ToString();
+        //            string groupSendingMsg = msg.value["groupSending"];
+        //            showForm1Msg(form1.richTextBox1, groupSendingMsg);
+        //            break;
+        //        default:
+        //            break;
+        //    }
 
 
 
-            bool bl = Convert.ToBoolean(jo["value"]["return"]);
-            if (bl)
-            {
-                Stopwatch st = new Stopwatch();
-                st.Start();
-
-                RetUser curr = user.Login(textBox1.Text, textBox2.Text);
-                st.Stop();
-
-
-                Stopwatch st1 = new Stopwatch();
-                st1.Start();
-                ShowFile(form1.listView1, curr.User.ID);
-                st1.Stop();
-
-                MessageBox.Show(string.Format("登陆成功!{0},{1}", st.ElapsedMilliseconds.ToString(),st1.ElapsedMilliseconds.ToString()));
-
-                CloseFrom();
-
-            }
-            else
-            {
-                tcpClient.tcpComm.stop();
-                MessageBox.Show("账号或密码错误!");
-            }
-
-        }
+        //}
         void denglu(tcpDataCommunication tcpComm, stringMsg msg)
         {
             string value = msg.value["return"];
@@ -125,6 +142,17 @@ namespace clientForm
             }
         }
 
- 
+        void showForm1Msg(RichTextBox richTextBox1, string msg)
+        {
+            if (richTextBox1.InvokeRequired)
+            {
+                this.BeginInvoke(new Action<RichTextBox, string>(showForm1Msg), richTextBox1, msg);
+            }
+            else
+            {
+                richTextBox1.Text += string.Format("[{0}]: ", DateTime.Now.ToString()) + msg + "\r\n\r\n";
+            }
+        }
+
     }
 }

@@ -1,6 +1,8 @@
 ﻿using BLE;
 using DB;
 using DB.Services;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,12 +16,12 @@ using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using tools.net;
 
 namespace clientForm
 {
     public partial class Form1 : Form
     {
-
         UserService user = new UserService();
         public Form1()
         {
@@ -27,7 +29,7 @@ namespace clientForm
         }
 
         tools.net.zTcpClient zTcpClient1 = new tools.net.zTcpClient();
-
+        Login login;
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -41,11 +43,14 @@ namespace clientForm
             int port;
             b = int.TryParse(textBox2.Text, out port);
             zTcpClient1.Connect(new System.Net.IPEndPoint(ip, port));
-            Login login = new clientForm.Login(zTcpClient1, this);
+
+            zTcpClient1.tcpComm.newBleMessageEvent += newBlemessageEventFun;
+
+            login = new clientForm.Login(zTcpClient1, this);
             login.Show();
 
         }
-
+        //给服务端发消息
         private void button5_Click(object sender, EventArgs e)
         {
             BLE.stringMsg m1 = new BLE.stringMsg();
@@ -56,7 +61,7 @@ namespace clientForm
 
 
         }
-
+        //给服务端发送文件
         private void button7_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -116,18 +121,21 @@ namespace clientForm
             }
             return newfilename;
         }
+        //下载
         private void button4_Click(object sender, EventArgs e)
         {
             //下载
             DownLand();
         }
 
+        //刷新列表
         private void button3_Click(object sender, EventArgs e)
         {
             //刷新列表
             ResetList();
         }
 
+        //重置
         private void ResetList()
         {
             this.listView1.Items.Clear();
@@ -141,6 +149,7 @@ namespace clientForm
             }
         }
 
+        //下载方法
         private void DownLand()
         {
             if (this.listView1.SelectedItems.Count > 0)
@@ -189,5 +198,93 @@ namespace clientForm
                 }
             }
         }
+
+        //新消息事件
+        void newBlemessageEventFun(tcpDataCommunication tcpComm, BLEData ble)
+        {
+            //string jsonText = ((BLE.bleClass.t11)ble).msg;
+            //JObject jo = (JObject)JsonConvert.DeserializeObject(jsonText);
+
+            BLE.bleClass.t11 t11 = (BLE.bleClass.t11)ble;
+            stringMsg msg = stringMsg.jsonToModel(t11.msg);
+
+
+            switch (msg.name)
+            {
+                case msgEnum.dengru:
+                    //bool bl = Convert.ToBoolean(jo["value"]["return"]);
+                    bool bl = Convert.ToBoolean(msg.value["return"]);
+                    if (bl)
+                    {
+                        RetUser curr = user.Login(login.textBox1.Text, login.textBox2.Text);
+                        ShowFile(curr.User.ID);
+                        MessageBox.Show(string.Format("登陆成功!"));
+                        CloseFrom(login);
+                    }
+                    else
+                    {
+                        zTcpClient1.tcpComm.stop();
+                        MessageBox.Show("账号或密码错误!");
+                    }
+                    break;
+                case msgEnum.liaotian:
+                    //string groupSendingMsg = jo["value"]["groupSending"].ToString();
+                    string groupSendingMsg = msg.value["groupSending"];
+                    showMsg(groupSendingMsg);
+                    break;
+                default:
+                    break;
+            }
+
+
+
+        }
+        //关闭登录框窗体
+        void CloseFrom(Login login)
+        {
+            if (login.InvokeRequired)
+            {
+                login.BeginInvoke(new Action<Login>(CloseFrom), login);
+            }
+            else
+            {
+                login.Close();
+            }
+
+        }
+        //读取用户文件信息
+        void ShowFile(int userId)
+        {
+            if (listView1.InvokeRequired)
+            {
+                this.BeginInvoke(new Action<int>(ShowFile), userId);
+            }
+            else
+            {
+                listView1.Items.Clear();
+                List<DB.FileInfo> list = user.GetFileListByUserId(userId);
+                foreach (DB.FileInfo item in list)
+                {
+                    ListViewItem lvi = new ListViewItem();
+                    lvi.Text = item.FileName;
+                    lvi.Name = item.FilePath;
+                    listView1.Items.Add(lvi);
+                }
+            }
+        }
+        //显示服务端消息
+        void showMsg(string msg)
+        {
+            if (this.richTextBox1.InvokeRequired)
+            {
+                this.BeginInvoke(new Action<string>(showMsg), msg);
+            }
+            else
+            {
+                this.richTextBox1.Text += string.Format("[{0}]: ", DateTime.Now.ToString()) + msg + "\r\n\r\n";
+            }
+
+        }
+
     }
 }

@@ -263,6 +263,7 @@
             this.button6.TabIndex = 2;
             this.button6.Text = "群发消息";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // button5
             // 

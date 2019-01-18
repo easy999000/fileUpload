@@ -165,7 +165,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 44);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(640, 332);
+            this.tabPage1.Size = new System.Drawing.Size(638, 297);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "消息";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -185,8 +185,8 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.richTextBox2);
             this.splitContainer2.Panel2.Controls.Add(this.button5);
-            this.splitContainer2.Size = new System.Drawing.Size(634, 326);
-            this.splitContainer2.SplitterDistance = 162;
+            this.splitContainer2.Size = new System.Drawing.Size(632, 291);
+            this.splitContainer2.SplitterDistance = 144;
             this.splitContainer2.TabIndex = 9;
             // 
             // richTextBox1
@@ -194,7 +194,7 @@
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Location = new System.Drawing.Point(0, 0);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(634, 162);
+            this.richTextBox1.Size = new System.Drawing.Size(632, 144);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             // 
@@ -205,14 +205,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox2.Location = new System.Drawing.Point(0, 4);
             this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(629, 111);
+            this.richTextBox2.Size = new System.Drawing.Size(627, 94);
             this.richTextBox2.TabIndex = 6;
             this.richTextBox2.Text = "";
             // 
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(529, 119);
+            this.button5.Location = new System.Drawing.Point(527, 102);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(98, 34);
             this.button5.TabIndex = 7;
@@ -330,7 +330,6 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label4;
@@ -349,6 +348,7 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         public System.Windows.Forms.ListView listView1;
+        public System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 

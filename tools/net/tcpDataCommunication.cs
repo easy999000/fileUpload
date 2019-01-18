@@ -108,7 +108,7 @@ namespace tools.net
         /// <param name="o"></param>
         void readByte(object o)
         {
-
+            bool whileSwitch = true;
             NetworkStream stream1 = tcpClient1.GetStream();
             int c = 0;
             // stream1.
@@ -117,7 +117,7 @@ namespace tools.net
 
             //    tools.log.writeLog("tcpListenerControl.readByte 线程:{0},数据等待", System.Threading.Thread.CurrentThread.ManagedThreadId);
 #endif
-            while (true)
+            while (whileSwitch)
             {
                 c++;
                 try
@@ -128,25 +128,31 @@ namespace tools.net
                     //  dataPro.readData(bs, count);
                     readData(bs, count);
 #if DEBUG
-                    tools.log.writeLog("try:第{0}次",  c.ToString());
+                    //tools.log.writeLog("try:第{0}次",  c.ToString());
 #endif
                 }
                 catch (NotSupportedException ex1)
                 {
+                    whileSwitch = false;
+                    tools.log.writeLog("NotSupportedException:{0},第{1}次", ex1.Message, c.ToString());
                     connectionDisconnection();
                 }
                 catch (ObjectDisposedException ex2)
                 {
+                    whileSwitch = false;
                     tools.log.writeLog("ObjectDisposedException:{0},第{1}次", ex2.Message,c.ToString());
-                    //connectionDisconnection();
+                    connectionDisconnection();
                 }
                 catch (IOException ex3)
                 {
+                    whileSwitch = false;
                     tools.log.writeLog("IOException:{0},第{1}次", ex3.Message, c.ToString());
-                    //connectionDisconnection();
+                    connectionDisconnection();
                 }
                 catch (System.Threading.ThreadAbortException ex)
                 {
+                    whileSwitch = false;
+                    tools.log.writeLog("ThreadAbortException:{0},第{1}次", ex.Message, c.ToString());
                     ///线程终止
                     connectionDisconnection();
                 }
@@ -421,13 +427,13 @@ namespace tools.net
         /// </summary>
         /// <param name="o"></param>
         void thSend(object o)
-        { 
-
+        {
+            bool whileSwitch = true;
 #if DEBUG
 
             //    tools.log.writeLog("tcpListenerControl.readByte 线程:{0},数据等待", System.Threading.Thread.CurrentThread.ManagedThreadId);
 #endif
-            while (true)
+            while (whileSwitch)
             {
                 try
                 {
@@ -453,18 +459,26 @@ namespace tools.net
                 }
                 catch (NotSupportedException ex1)
                 {
+                    whileSwitch = false;
+                    tools.log.writeLog("NotSupportedException:{0}", ex1.Message);
                     connectionDisconnection();
                 }
                 catch (ObjectDisposedException ex2)
                 {
+                    whileSwitch = false;
+                    tools.log.writeLog("ObjectDisposedException:{0}", ex2.Message);
                     connectionDisconnection();
                 }
                 catch (IOException ex3)
                 {
+                    whileSwitch = false;
+                    tools.log.writeLog("IOException:{0}", ex3.Message);
                     connectionDisconnection();
                 }
                 catch (System.Threading.ThreadAbortException ex)
                 {
+                    whileSwitch = false;
+                    tools.log.writeLog("ThreadAbortException:{0}", ex.Message);
                     ///线程终止
                     connectionDisconnection();
                 }

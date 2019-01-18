@@ -2,6 +2,7 @@
 using DB;
 using DB.Services;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -32,6 +33,7 @@ namespace fileUpload
         }
 
         tools.net.zTcpServer tcpServerListener;
+        tools.net.tcpConnectionControl tcpConnection;
 
         private void button1_Click_1(object sender, EventArgs e)
         {
@@ -45,10 +47,12 @@ namespace fileUpload
             int port;
             b = int.TryParse(textBox3.Text, out port);
 
+
             tcpServerListener = new tools.net.zTcpServer(ip, port);
             tcpServerListener.connControl.newMessageEvent += newBlemessageEventFun;
             tcpServerListener.start();
 
+            tcpConnection = tcpServerListener.connControl;
         }
         /// <summary>
         /// 消息接收事件处理程序
@@ -256,6 +260,21 @@ namespace fileUpload
             //    this.listView1.Items.Add(lvi);
             //}
         }
+        //群发消息
+        private void button6_Click(object sender, EventArgs e)
+        {
+            ConcurrentDictionary<string, tcpDataCommunication> tcpList = tcpConnection.tcpList;
+            foreach (KeyValuePair<string, tcpDataCommunication> tcp in tcpList)
+            {
+                tcpDataCommunication tcpComm = tcp.Value;
+                BLE.stringMsg m1 = new BLE.stringMsg();
+                m1.name = BLE.msgEnum.liaotian;
+                m1.value.Add("groupSending", this.richTextBox1.Text);
+                tcpComm.sendData(m1);
 
+            }
+            this.richTextBox1.Text = String.Empty;
+        }
+        
     }
 }

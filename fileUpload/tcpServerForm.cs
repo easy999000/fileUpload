@@ -276,10 +276,32 @@ namespace fileUpload
                 m1.name = BLE.msgEnum.liaotian;
                 m1.value.Add("groupSending", this.richTextBox1.Text);
                 tcpComm.sendData(m1);
-                 
+
             }
             this.richTextBox1.Text = String.Empty;
         }
-        
+        //指定用户发送消息
+        private void button5_Click_1(object sender, EventArgs e)
+        {
+            DataGridViewSelectedRowCollection rows = this.dataGridView1.SelectedRows;
+
+            foreach (DataGridViewRow item in rows)
+            {
+                DataGridViewRow itemx = item;
+                string a = item.Cells[0].ToString();
+                string b = item.Cells[0].Value.ToString();
+            }
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            foreach (DataGridViewRow item in this.dataGridView1.Rows)
+            {
+                if ((e.RowIndex).Equals(item.Index))
+                {
+                    item.Selected = true;
+                }
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BLE;
 using DB;
 using DB.Services;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -108,7 +109,9 @@ namespace fileUpload
             string address = tcpComm.tcpClientId.Split('&')[2];
             string account = msg.value["account"];
             string pwd = msg.value["pwd"];
+
             RetUser curr = user.Login(account, pwd);
+
             if (curr.Success)
             {
                 if (Common.tcpList == null)
@@ -122,6 +125,9 @@ namespace fileUpload
             BLE.stringMsg m1 = new BLE.stringMsg();
             m1.name = BLE.msgEnum.dengru;
             m1.value.Add("return", curr.Success.ToString());
+            m1.value.Add("ID", curr.User.ID.ToString());
+            string jsonCurr = JsonConvert.SerializeObject(curr);
+            m1.value.Add("jsonCurr", jsonCurr);
 
             tcpComm.sendData(m1);
         }

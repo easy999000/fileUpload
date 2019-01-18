@@ -23,6 +23,8 @@ namespace tools.net
 
         tcpDataQueueControl DataQueue = new tcpDataQueueControl();
 
+        public List<BLE.BLEData> sendFileList { get; set; }
+
         #region 接收相关字段
         List<byte> data = new List<byte>();
         /// <summary>

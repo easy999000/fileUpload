@@ -79,6 +79,8 @@ namespace clientForm
                 //改为队列
                 //t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());
                 zTcpClient1.tcpComm.addSendBle(t2);
+                
+                //发送文件队列 目前问题没有第一个发送的
                 List<BLE.BLEData> sendFileList = zTcpClient1.tcpComm.sendFileList;
             }
         }

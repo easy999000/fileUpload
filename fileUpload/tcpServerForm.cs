@@ -134,10 +134,12 @@ namespace fileUpload
         {
             if (this.InvokeRequired)
             {
+                //this.BeginInvoke(new Action<List<TCP>>(BindDataGridView), null);
                 this.BeginInvoke(new Action<List<TCP>>(BindDataGridView), tcp);
             }
             else
             {
+                this.dataGridView1.DataSource = null;
                 this.dataGridView1.DataSource = tcp;
             }
 
@@ -284,24 +286,59 @@ namespace fileUpload
         private void button5_Click_1(object sender, EventArgs e)
         {
             DataGridViewSelectedRowCollection rows = this.dataGridView1.SelectedRows;
-
-            foreach (DataGridViewRow item in rows)
+            if (rows.Count > 0)
             {
-                DataGridViewRow itemx = item;
-                string a = item.Cells[0].ToString();
-                string b = item.Cells[0].Value.ToString();
+
+
+                foreach (DataGridViewRow item in rows)
+                {
+                    DataGridViewRow itemx = item;
+                    string address = item.Cells[2].Value.ToString();
+
+                    ConcurrentDictionary<string, tcpDataCommunication> tcpList = tcpConnection.tcpList;
+                    List<string> keyList = tcpList.Keys.ToList();
+                    string key = "";
+                    foreach (string keyAddress in keyList)
+                    {
+                        string k = keyAddress.Substring(keyAddress.LastIndexOf("&") + 1, keyAddress.Length - keyAddress.LastIndexOf('&') - 1);
+                        if (k.Equals(address))
+                        {
+                            key = keyAddress;
+                        }
+                    }
+                    tcpDataCommunication tcpComm = tcpList[key];
+                    BLE.stringMsg m1 = new BLE.stringMsg();
+                    m1.name = BLE.msgEnum.liaotian;
+                    m1.value.Add("singleSending", this.richTextBox1.Text);
+                    tcpComm.sendData(m1);
+                    //foreach (KeyValuePair<string, tcpDataCommunication> tcp in tcpList)
+                    //{
+                    //    tcpDataCommunication tcpComm = tcp.Value;
+
+
+
+                    //}
+                    this.richTextBox1.Text = String.Empty;
+
+                }
+            }
+            else
+            {
+                MessageBox.Show("至少选择一个用户");
             }
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            foreach (DataGridViewRow item in this.dataGridView1.Rows)
-            {
-                if ((e.RowIndex).Equals(item.Index))
-                {
-                    item.Selected = true;
-                }
-            }
+            //foreach (DataGridViewRow item in this.dataGridView1.Rows)
+            //{
+            //    if ((e.RowIndex).Equals(item.Index))
+            //    {
+            DataGridViewRow row = this.dataGridView1.Rows[e.RowIndex];
+            this.textBox1.Text = row.Cells[2].Value.ToString();
+            //        item.Selected = true;
+            //    }
+            //}
         }
     }
 }

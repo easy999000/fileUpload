@@ -238,8 +238,8 @@ namespace clientForm
                     bool bl = Convert.ToBoolean(msg.value["return"]);
                     if (bl)
                     {
-                        
-             
+
+
                         RetUser curr = JsonConvert.DeserializeObject<RetUser>(msg.value["jsonCurr"]);
                         //RetUser curr = user.Login(login.textBox1.Text, login.textBox2.Text);
                         CurrUser.currUser = curr.User;
@@ -255,8 +255,16 @@ namespace clientForm
                     break;
                 case msgEnum.liaotian:
                     //string groupSendingMsg = jo["value"]["groupSending"].ToString();
-                    string groupSendingMsg = msg.value["groupSending"];
-                    showMsg(groupSendingMsg);
+                    string reciveMsg = "";
+                    if (msg.value.Keys.Contains("groupSending"))
+                    {
+                        reciveMsg= msg.value["groupSending"];
+                    }
+                    else if (msg.value.Keys.Contains("singleSending"))
+                    {
+                        reciveMsg = msg.value["singleSending"];
+                    }
+                    showMsg(reciveMsg);
                     break;
                 default:
                     break;

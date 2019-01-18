@@ -153,6 +153,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(0, 62);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -237,6 +238,7 @@
             // 
             this.textBox1.Location = new System.Drawing.Point(74, 29);
             this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(229, 21);
             this.textBox1.TabIndex = 5;
             // 

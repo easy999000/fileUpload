@@ -322,6 +322,7 @@
             this.listView2.Size = new System.Drawing.Size(632, 291);
             this.listView2.TabIndex = 0;
             this.listView2.UseCompatibleStateImageBehavior = false;
+            this.listView2.View = System.Windows.Forms.View.Details;
             // 
             // Form1
             // 

@@ -14,6 +14,7 @@ using System.Net;
 using System.Security;
 using System.Security.Permissions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using tools.net;
@@ -23,6 +24,7 @@ namespace clientForm
     public partial class Form1 : Form
     {
         UserService user = new UserService();
+        List<BLE.BLEData> currentSendBleData;
         public Form1()
         {
             InitializeComponent();
@@ -61,6 +63,8 @@ namespace clientForm
 
 
         }
+
+        System.Threading.Timer timer;
         //给服务端发送文件
         private void button7_Click(object sender, EventArgs e)
         {
@@ -89,24 +93,78 @@ namespace clientForm
 
                 BLE.BLEData currentSend = zTcpClient1.tcpComm.currentSendBleData;
                 //发送文件队列 目前问题没有第一个发送的currentSendBleData
-                List<BLE.BLEData> currentSendBleData = zTcpClient1.tcpComm.sendFileList;
+                currentSendBleData = zTcpClient1.tcpComm.sendFileList;
 
-               
+                this.listView2.Columns.Clear();
+                this.listView2.Columns.Add("文件名", 500, HorizontalAlignment.Left);
+                this.listView2.Columns.Add("进度", 100, HorizontalAlignment.Left);
 
-                ListViewItem lvi = new ListViewItem();
-              
+                //currentSend.currProgress
+                //传输的文件
+                //if (currentSend != null)
+                //{
+                    //System.Timers.Timer t = new System.Timers.Timer(500);//实例化Timer类，设置间隔时间为10000毫秒；
+                    //t.Elapsed += new System.Timers.ElapsedEventHandler(currProgress, currentSend,);
+                    //t.AutoReset = true;
+                    
+                    
+                   // NewMethod(currentSend);
 
-                //lvi.Text=currentSend.
+                //}
+                timer = new System.Threading.Timer(currProgress, currentSend, TimeSpan.FromSeconds(0), TimeSpan.FromMilliseconds(500));
 
-                //currentSendBleData.Add(currentSend);  currProgress
-
-                //currentSend.currProgress;
-
-                //      ListViewItem lvi = new ListViewItem();
-                //lvi.Text = item;
-                //this.listView1.Items.Add(lvi);
+                //队列中尚未传输
+                //for (int i = 0; i < currentSendBleData.Count; i++)
+                //{
+                //    BLE.bleClass.t12 t12_wait = (BLE.bleClass.t12)currentSendBleData[i];
+                //    stringMsg msg_wait = stringMsg.jsonToModel(t12_wait.ToString());
+                //    string fName_wait = msg_wait.value["FileName"];
+                //    ListViewItem lvi_wait = new ListViewItem();
+                //    lvi_wait.Text = fName_wait;
+                //    lvi_wait.SubItems.Add("等待中...");
+                //    this.listView2.Items.Add(lvi_wait);
+                //}
 
             }
+        }
+
+        private void currProgress(object currentSend)//
+        {
+
+            if (listView2.InvokeRequired)
+            {
+                listView2.BeginInvoke(new Action<object>(currProgress), currentSend);
+            }
+            else
+            {
+                BLEData t12 = (BLEData)currentSend;
+                stringMsg msg = stringMsg.jsonToModel(t12.ToString());
+                string fName = msg.value["FileName"];
+                //正在传输的
+                this.listView2.Items.Clear();
+                ListViewItem lvi = new ListViewItem();
+                lvi.Text = fName;
+                lvi.SubItems.Add(t12.currProgress.ToString() + "%");
+                this.listView2.Items.Add(lvi);
+                if (t12.currProgress > 99)
+                {
+                    //timer.Dispose();
+                    this.listView2.Items.Clear();
+                }
+                //队列中尚未传输
+                for (int i = 0; i < currentSendBleData.Count; i++)
+                {
+                    BLEData t12_wait = (BLEData)currentSendBleData[i];
+                    stringMsg msg_wait = stringMsg.jsonToModel(t12_wait.ToString());
+                    string fName_wait = msg_wait.value["FileName"];
+                    ListViewItem lvi_wait = new ListViewItem();
+                    lvi_wait.Text = fName_wait;
+                    lvi_wait.SubItems.Add("等待中...");
+                    this.listView2.Items.Add(lvi_wait);
+                }
+            }
+           
+
         }
         //停止连接
         private void button1_Click(object sender, EventArgs e)
@@ -258,7 +316,7 @@ namespace clientForm
                     string reciveMsg = "";
                     if (msg.value.Keys.Contains("groupSending"))
                     {
-                        reciveMsg= msg.value["groupSending"];
+                        reciveMsg = msg.value["groupSending"];
                     }
                     else if (msg.value.Keys.Contains("singleSending"))
                     {

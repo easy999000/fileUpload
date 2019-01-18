@@ -290,7 +290,7 @@ namespace BLE.bleClass
 
             //fileStream.CopyTo(sr);
             byte[] bytes = new byte[128];
-            int num = 0;
+            float num = 0;
             while (true)
             {
                 // byte[] srByte = StreamToBytes(sr, num);
@@ -301,9 +301,9 @@ namespace BLE.bleClass
                     break;
                 }
                 sr.Write(bytes, 0, n);
-                num++;
+                num += n;
 
-                currProgress = num / Convert.ToInt32(fileStream.Length / 128 + 1) * 100;
+                currProgress = int.Parse(Math.Ceiling((num / fileStream.Length)*100).ToString());
             }
 
             fileStream.Close();

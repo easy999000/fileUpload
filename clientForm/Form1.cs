@@ -87,7 +87,7 @@ namespace clientForm
                 //改为队列
                 //t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());
                 zTcpClient1.tcpComm.addSendBle(t2);
-                
+
                 //发送文件队列 目前问题没有第一个发送的
                 List<BLE.BLEData> sendFileList = zTcpClient1.tcpComm.sendFileList;
             }
@@ -222,8 +222,8 @@ namespace clientForm
                     bool bl = Convert.ToBoolean(msg.value["return"]);
                     if (bl)
                     {
-                        
-             
+
+
                         RetUser curr = JsonConvert.DeserializeObject<RetUser>(msg.value["jsonCurr"]);
                         //RetUser curr = user.Login(login.textBox1.Text, login.textBox2.Text);
                         CurrUser.currUser = curr.User;
@@ -239,8 +239,16 @@ namespace clientForm
                     break;
                 case msgEnum.liaotian:
                     //string groupSendingMsg = jo["value"]["groupSending"].ToString();
-                    string groupSendingMsg = msg.value["groupSending"];
-                    showMsg(groupSendingMsg);
+                    string reciveMsg = "";
+                    if (msg.value.Keys.Contains("groupSending"))
+                    {
+                        reciveMsg= msg.value["groupSending"];
+                    }
+                    else if (msg.value.Keys.Contains("singleSending"))
+                    {
+                        reciveMsg = msg.value["singleSending"];
+                    }
+                    showMsg(reciveMsg);
                     break;
                 default:
                     break;

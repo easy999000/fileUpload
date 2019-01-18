@@ -339,7 +339,11 @@ namespace BLE.bleClass
             ms.Write(messageData[1], 0, messageData[1].Count());
             ms.Write(messageData[2], 0, messageData[2].Count());
 
+
+            //进度  分着读取  
             fileStream.CopyTo(ms);
+            
+
 
             fileStream.Close();
             //  ms.Close();

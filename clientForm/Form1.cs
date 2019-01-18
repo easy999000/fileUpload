@@ -54,7 +54,6 @@ namespace clientForm
 
             zTcpClient1.tcpComm.sendData(m1);
 
-
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -77,8 +76,10 @@ namespace clientForm
                 sm.value.Add("FirstFloorDir", config.Path + "\\" + CurrUser.currUser.ID);//文件存储路径
                 t2.ReceiveFullMsg = sm.modelToJson();
 
-                t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());
-                //zTcpClient1.tcpComm.addSendBle(t2);
+                //改为队列
+                //t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());
+                zTcpClient1.tcpComm.addSendBle(t2);
+                List<BLE.BLEData> sendFileList = zTcpClient1.tcpComm.sendFileList;
             }
         }
         //停止连接
@@ -118,7 +119,7 @@ namespace clientForm
         }
         private void button4_Click(object sender, EventArgs e)
         {
-            //下载
+            //下载 
             DownLand();
         }
 

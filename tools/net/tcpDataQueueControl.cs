@@ -27,6 +27,11 @@ namespace tools.net
             }
         }
 
+        public List<BLE.BLEData> GetSendFileList()
+        {
+            return DataQueue.GetSendFileList();
+        }
+
         /// <summary>
         /// 向缓存中添加数据.
         /// </summary>

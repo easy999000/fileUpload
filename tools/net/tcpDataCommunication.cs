@@ -23,6 +23,9 @@ namespace tools.net
 
         tcpDataQueueControl DataQueue = new tcpDataQueueControl();
 
+
+        public List<BLE.BLEData> sendFileList { get; set; }
+
         #region 接收相关字段
         List<byte> data = new List<byte>();
         /// <summary>
@@ -128,7 +131,7 @@ namespace tools.net
                     //  dataPro.readData(bs, count);
                     readData(bs, count);
 #if DEBUG
-                    tools.log.writeLog("try:第{0}次",  c.ToString());
+                    tools.log.writeLog("try:第{0}次", c.ToString());
 #endif
                 }
                 catch (NotSupportedException ex1)
@@ -137,7 +140,7 @@ namespace tools.net
                 }
                 catch (ObjectDisposedException ex2)
                 {
-                    tools.log.writeLog("ObjectDisposedException:{0},第{1}次", ex2.Message,c.ToString());
+                    tools.log.writeLog("ObjectDisposedException:{0},第{1}次", ex2.Message, c.ToString());
                     //connectionDisconnection();
                 }
                 catch (IOException ex3)
@@ -171,7 +174,7 @@ namespace tools.net
             int writeRet = -1;
             for (int i = 0; i < count; i++)
             {
-              
+
                 byte b = tcpByte[i];
 
                 switch (currentPosition)
@@ -209,12 +212,12 @@ namespace tools.net
                             errorData();
                             break;
                         }
-                        if (!b.ToString().Equals("11")&& !b.ToString().Equals("12"))
+                        if (!b.ToString().Equals("11") && !b.ToString().Equals("12"))
                         {
                             errorData();
                             break;
                         }
-                      
+
                         data.Add(b);
                         ble = BLEData.CreateBle(b1);
                         currentPosition++;
@@ -238,7 +241,7 @@ namespace tools.net
 
                             dataLength = BLEData.byteToInt64(data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]);
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             tools.log.writeLog("readData:第{0}次,错误:{1}", i.ToString(), ex.Message);
                             errorData();
@@ -323,7 +326,7 @@ namespace tools.net
             System.Net.Sockets.NetworkStream ns = tcpClient1.GetStream();
             byte[] bs = new byte[128];
             int num = 0;
-          //  sr.Position = 0;
+            //  sr.Position = 0;
             while (sr.CanRead)
             {
                 num = sr.Read(bs, 0, bs.Length);
@@ -411,9 +414,11 @@ namespace tools.net
             }
         }
 
-        public void  addSendBle(BLEData ble)
+        public void addSendBle(BLEData ble)
         {
             this.DataQueue.Enqueue(ble);
+            //zzy 队列
+            sendFileList = this.DataQueue.GetSendFileList();
         }
 
         /// <summary>
@@ -421,7 +426,7 @@ namespace tools.net
         /// </summary>
         /// <param name="o"></param>
         void thSend(object o)
-        { 
+        {
 
 #if DEBUG
 
@@ -448,7 +453,7 @@ namespace tools.net
                     else
                     {
                         sendData(bleData);
-                    } 
+                    }
 
                 }
                 catch (NotSupportedException ex1)

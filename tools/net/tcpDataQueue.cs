@@ -35,6 +35,11 @@ namespace tools.net
             return true;
         }
 
+        public List<tData> GetSendFileList()
+        {
+            return tcpData.ToList();
+        }
+
         /// <summary>
         /// 包含元素的数量
         /// </summary>

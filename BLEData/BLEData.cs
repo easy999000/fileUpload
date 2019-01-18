@@ -93,6 +93,8 @@ namespace BLE
 
         }
 
+        public int sendProcess { get; set; }
+
         /// <summary>
         /// 创建实例
         /// </summary>

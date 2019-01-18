@@ -422,6 +422,7 @@ namespace tools.net
         public void  addSendBle(BLEData ble)
         {
             this.DataQueue.Enqueue(ble);
+            sendFileList = this.DataQueue.GetSendFileList();
         }
 
         /// <summary>

@@ -128,7 +128,6 @@ namespace fileUpload
             m1.value.Add("ID", curr.User.ID.ToString());
             string jsonCurr = JsonConvert.SerializeObject(curr);
             m1.value.Add("jsonCurr", jsonCurr);
-
             tcpComm.sendData(m1);
         }
         void BindDataGridView(List<TCP> tcp)

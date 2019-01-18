@@ -277,7 +277,7 @@ namespace fileUpload
                 m1.name = BLE.msgEnum.liaotian;
                 m1.value.Add("groupSending", this.richTextBox1.Text);
                 tcpComm.sendData(m1);
-
+                 
             }
             this.richTextBox1.Text = String.Empty;
         }

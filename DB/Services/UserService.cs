@@ -239,7 +239,25 @@ namespace DB.Services
             }
         }
 
-
+        /// <summary>
+        /// 更新下载次数
+        /// </summary>
+        /// <param name="filePath"></param>
+        public void UpdateDownLand(string filePath)
+        {
+            using (DB db = new DB())
+            {
+                try
+                {
+                    FileInfo file = db.FileInfo.Where(x => x.FilePath == filePath).FirstOrDefault();
+                    file.Download += 1;
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+        }
 
     }
 

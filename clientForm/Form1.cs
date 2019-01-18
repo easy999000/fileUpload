@@ -171,6 +171,7 @@ namespace clientForm
                                     fs.Write(data, 0, data.Length);
                                     fs.Close();
                                     MessageBox.Show("下载成功！", "提示");
+                                    user.UpdateDownLand(filepath);
                                     user.Add_Log_Opera(CurrUser.currUser.ID, CurrUser.currUser.Account, string.Format("下载文件{0}", folder));
                                 }
                                 else

@@ -65,12 +65,14 @@ namespace clientForm
 
                 RetUser curr = user.Login(textBox1.Text, textBox2.Text);
                 st.Stop();
-            
-            
-                ShowFile(form1.listView1, curr.User.ID);
-            
 
-                MessageBox.Show(string.Format("登陆成功!{0}", st.ElapsedMilliseconds.ToString()));
+
+                Stopwatch st1 = new Stopwatch();
+                st1.Start();
+                ShowFile(form1.listView1, curr.User.ID);
+                st1.Stop();
+
+                MessageBox.Show(string.Format("登陆成功!{0},{1}", st.ElapsedMilliseconds.ToString(),st1.ElapsedMilliseconds.ToString()));
 
                 CloseFrom();
 

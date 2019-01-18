@@ -82,7 +82,7 @@ namespace clientForm
                 sm.value.Add("FirstFloorDir", config.Path + "\\" + CurrUser.currUser.ID);//文件存储路径
                 t2.ReceiveFullMsg = sm.modelToJson();
 
-                t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());
+
                 //zTcpClient1.tcpComm.addSendBle(t2);
                 //改为队列
                 //t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());

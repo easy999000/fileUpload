@@ -103,12 +103,12 @@ namespace clientForm
                 //传输的文件
                 //if (currentSend != null)
                 //{
-                    //System.Timers.Timer t = new System.Timers.Timer(500);//实例化Timer类，设置间隔时间为10000毫秒；
-                    //t.Elapsed += new System.Timers.ElapsedEventHandler(currProgress, currentSend,);
-                    //t.AutoReset = true;
-                    
-                    
-                   // NewMethod(currentSend);
+                //System.Timers.Timer t = new System.Timers.Timer(500);//实例化Timer类，设置间隔时间为10000毫秒；
+                //t.Elapsed += new System.Timers.ElapsedEventHandler(currProgress, currentSend,);
+                //t.AutoReset = true;
+
+
+                // NewMethod(currentSend);
 
                 //}
                 timer = new System.Threading.Timer(currProgress, currentSend, TimeSpan.FromSeconds(0), TimeSpan.FromMilliseconds(500));
@@ -164,7 +164,7 @@ namespace clientForm
                     this.listView2.Items.Add(lvi_wait);
                 }
             }
-           
+
 
         }
         //停止连接
@@ -302,9 +302,8 @@ namespace clientForm
                         RetUser curr = JsonConvert.DeserializeObject<RetUser>(msg.value["jsonCurr"]);
                         //RetUser curr = user.Login(login.textBox1.Text, login.textBox2.Text);
                         CurrUser.currUser = curr.User;
+                        CloseFrom2();
                         ShowFile(curr.User.ID);
-                        MessageBox.Show(string.Format("登陆成功!"));
-                        CloseFrom(login);
                     }
                     else
                     {
@@ -333,11 +332,25 @@ namespace clientForm
 
         }
         //关闭登录框窗体
+        void CloseFrom2()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(CloseFrom2));
+            }
+            else
+            {
+                MessageBox.Show(string.Format("登陆成功!"));
+                CloseFrom(login);
+            }
+
+        }
+        //关闭登录框窗体
         void CloseFrom(Login login)
         {
-            if (login.InvokeRequired)
+            if (this.InvokeRequired)
             {
-                login.BeginInvoke(new Action<Login>(CloseFrom), login);
+                this.Invoke(new Action<Login>(CloseFrom), login);
             }
             else
             {

@@ -173,6 +173,7 @@ namespace tools.net
         {
             this.tcpClient1.Close();
             this.thReading.Abort();
+            this.thSending.Abort();
         }
         /// <summary>
         /// 处理数据

@@ -23,6 +23,8 @@ namespace tools.net
 
         tcpDataQueueControl DataQueue = new tcpDataQueueControl();
 
+        public List<BLE.BLEData> sendFileList { get; set; }
+
         #region 接收相关字段
         List<byte> data = new List<byte>();
         /// <summary>
@@ -59,6 +61,11 @@ namespace tools.net
         /// 发送线程
         /// </summary>
         System.Threading.Thread thSending;
+
+        /// <summary>
+        /// 当前正在发送的对象。
+        /// </summary>
+        public BLEData currentSendBleData;
         #endregion
 
         /////要测试的几个问题,可不可以同时进行读写.可不可以一个tcp类,get多个流进行读写.多个流是不是一个实例.,可不可以多线程读写.
@@ -108,7 +115,7 @@ namespace tools.net
         /// <param name="o"></param>
         void readByte(object o)
         {
-
+            bool whileSwitch = true;
             NetworkStream stream1 = tcpClient1.GetStream();
             int c = 0;
             // stream1.
@@ -117,7 +124,7 @@ namespace tools.net
 
             //    tools.log.writeLog("tcpListenerControl.readByte 线程:{0},数据等待", System.Threading.Thread.CurrentThread.ManagedThreadId);
 #endif
-            while (true)
+            while (whileSwitch)
             {
                 c++;
                 try
@@ -127,24 +134,32 @@ namespace tools.net
 
                     //  dataPro.readData(bs, count);
                     readData(bs, count);
+#if DEBUG
+                    //tools.log.writeLog("try:第{0}次",  c.ToString());
+#endif
                 }
                 catch (NotSupportedException ex1)
                 {
-                    tools.log.writeLog(ex1);
+                    whileSwitch = false;
+                    tools.log.writeLog("NotSupportedException:{0},第{1}次", ex1.Message, c.ToString());
                     connectionDisconnection();
                 }
                 catch (ObjectDisposedException ex2)
                 {
-                    tools.log.writeLog("ObjectDisposedException:{0},第{1}次", ex2.Message,c.ToString());
-                    //connectionDisconnection();
+                    whileSwitch = false;
+                    tools.log.writeLog("ObjectDisposedException:{0},第{1}次", ex2.Message, c.ToString());
+                    connectionDisconnection();
                 }
                 catch (IOException ex3)
                 {
+                    whileSwitch = false;
                     tools.log.writeLog("IOException:{0},第{1}次", ex3.Message, c.ToString());
-                    //connectionDisconnection();
+                    connectionDisconnection();
                 }
                 catch (System.Threading.ThreadAbortException ex)
                 {
+                    whileSwitch = false;
+                    tools.log.writeLog("ThreadAbortException:{0},第{1}次", ex.Message, c.ToString());
                     ///线程终止
                     connectionDisconnection();
                 }
@@ -169,6 +184,7 @@ namespace tools.net
             int writeRet = -1;
             for (int i = 0; i < count; i++)
             {
+
                 byte b = tcpByte[i];
 
                 switch (currentPosition)
@@ -206,6 +222,12 @@ namespace tools.net
                             errorData();
                             break;
                         }
+                        if (!b.ToString().Equals("11") && !b.ToString().Equals("12"))
+                        {
+                            errorData();
+                            break;
+                        }
+
                         data.Add(b);
                         ble = BLEData.CreateBle(b1);
                         currentPosition++;
@@ -229,8 +251,9 @@ namespace tools.net
 
                             dataLength = BLEData.byteToInt64(data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]);
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            tools.log.writeLog("readData:第{0}次,错误:{1}", i.ToString(), ex.Message);
                             errorData();
                             break;
                         }
@@ -313,7 +336,7 @@ namespace tools.net
             System.Net.Sockets.NetworkStream ns = tcpClient1.GetStream();
             byte[] bs = new byte[128];
             int num = 0;
-          //  sr.Position = 0;
+            //  sr.Position = 0;
             while (sr.CanRead)
             {
                 num = sr.Read(bs, 0, bs.Length);
@@ -401,9 +424,10 @@ namespace tools.net
             }
         }
 
-        public void  addSendBle(BLEData ble)
+        public void addSendBle(BLEData ble)
         {
             this.DataQueue.Enqueue(ble);
+            sendFileList = this.DataQueue.GetSendFileList();
         }
 
         /// <summary>
@@ -411,50 +435,59 @@ namespace tools.net
         /// </summary>
         /// <param name="o"></param>
         void thSend(object o)
-        { 
-
+        {
+            bool whileSwitch = true;
 #if DEBUG
 
             //    tools.log.writeLog("tcpListenerControl.readByte 线程:{0},数据等待", System.Threading.Thread.CurrentThread.ManagedThreadId);
 #endif
-            while (true)
+            while (whileSwitch)
             {
                 try
                 {
 
-                    BLEData bleData = this.DataQueue.Dequeue();
-                    if (bleData == null)
+                    currentSendBleData = this.DataQueue.Dequeue();
+                    if (currentSendBleData == null)
                     {
                         continue;
                     }
 #if DEBUG
                     //   tools.log.writeLog("tcpDataProcessingControl.tcpDataProcessing 线程:{0},取到了一条数据", System.Threading.Thread.CurrentThread.ManagedThreadId);
 #endif
-                    if (bleData.command == BLEcommand.t12)
+                    if (currentSendBleData.command == BLEcommand.t12)
                     {
-                        bleData.toBleStream(this.sendDataGetStream());
+                        currentSendBleData.toBleStream(this.sendDataGetStream());
 
                     }
                     else
                     {
-                        sendData(bleData);
-                    } 
+                        sendData(currentSendBleData);
+                    }
+                    currentSendBleData = null;
 
                 }
                 catch (NotSupportedException ex1)
                 {
+                    whileSwitch = false;
+                    tools.log.writeLog("NotSupportedException:{0}", ex1.Message);
                     connectionDisconnection();
                 }
                 catch (ObjectDisposedException ex2)
                 {
+                    whileSwitch = false;
+                    tools.log.writeLog("ObjectDisposedException:{0}", ex2.Message);
                     connectionDisconnection();
                 }
                 catch (IOException ex3)
                 {
+                    whileSwitch = false;
+                    tools.log.writeLog("IOException:{0}", ex3.Message);
                     connectionDisconnection();
                 }
                 catch (System.Threading.ThreadAbortException ex)
                 {
+                    whileSwitch = false;
+                    tools.log.writeLog("ThreadAbortException:{0}", ex.Message);
                     ///线程终止
                     connectionDisconnection();
                 }

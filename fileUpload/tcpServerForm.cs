@@ -1,7 +1,9 @@
 ﻿using BLE;
 using DB;
 using DB.Services;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -32,6 +34,7 @@ namespace fileUpload
         }
 
         tools.net.zTcpServer tcpServerListener;
+        tools.net.tcpConnectionControl tcpConnection;
 
         private void button1_Click_1(object sender, EventArgs e)
         {
@@ -45,10 +48,12 @@ namespace fileUpload
             int port;
             b = int.TryParse(textBox3.Text, out port);
 
+
             tcpServerListener = new tools.net.zTcpServer(ip, port);
             tcpServerListener.connControl.newMessageEvent += newBlemessageEventFun;
             tcpServerListener.start();
 
+            tcpConnection = tcpServerListener.connControl;
         }
         /// <summary>
         /// 消息接收事件处理程序
@@ -56,14 +61,16 @@ namespace fileUpload
         /// <param name="tcpComm"></param>
         /// <param name="msg"></param>
         void newBlemessageEventFun(tcpDataCommunication tcpComm, stringMsg msg)
-        {      
+        {
+
             switch (msg.name)
             {
                 case msgEnum.liaotian:
                     liaotian(tcpComm, msg);
                     break;
                 case msgEnum.fileUpload:
-                    showMsg(string.Format("收到文件", msg.value["value"]));
+                    showMsg(string.Format("收到文件{0}", msg.value["FileName"]));
+                    bool bl = AddFileInfo(msg);
                     break;
                 case msgEnum.dengru:
                     denglu(tcpComm, msg);
@@ -72,6 +79,24 @@ namespace fileUpload
                     break;
             }
 
+        }
+
+        private bool AddFileInfo(stringMsg msg)
+        {
+            int userId = Convert.ToInt32(msg.value["UserId"]);
+            string filePath = msg.value["value"];
+            string firstFloor = msg.value["FirstFloor"];
+            string fileName = msg.value["FileName"];
+            bool bl = user.AddFileInfo(userId, filePath, firstFloor, fileName);
+            if (bl)
+            {
+                user.Add_Log_Opera(userId, "", string.Format("上传文件{0}", fileName));
+            }
+            else
+            {
+                user.Add_Log_Error(userId, "", string.Format("上传文件{0}出现问题", fileName));
+            }
+            return bl;
         }
 
         void liaotian(tcpDataCommunication tcpComm, stringMsg msg)
@@ -84,9 +109,8 @@ namespace fileUpload
             string address = tcpComm.tcpClientId.Split('&')[2];
             string account = msg.value["account"];
             string pwd = msg.value["pwd"];
-            RetUser curr = user.Login(account, pwd);
 
-            
+            RetUser curr = user.Login(account, pwd);
 
             if (curr.Success)
             {
@@ -97,21 +121,25 @@ namespace fileUpload
                 Common.tcpList.Add(new TCP() { ID = curr.User.ID, Name = curr.User.Account, Address = address });
                 BindDataGridView(Common.tcpList);
             }
-            
+
             BLE.stringMsg m1 = new BLE.stringMsg();
             m1.name = BLE.msgEnum.dengru;
             m1.value.Add("return", curr.Success.ToString());
-
+            m1.value.Add("ID", curr.User.ID.ToString());
+            string jsonCurr = JsonConvert.SerializeObject(curr);
+            m1.value.Add("jsonCurr", jsonCurr);
             tcpComm.sendData(m1);
         }
         void BindDataGridView(List<TCP> tcp)
         {
             if (this.InvokeRequired)
             {
+                //this.BeginInvoke(new Action<List<TCP>>(BindDataGridView), null);
                 this.BeginInvoke(new Action<List<TCP>>(BindDataGridView), tcp);
             }
             else
             {
+                this.dataGridView1.DataSource = null;
                 this.dataGridView1.DataSource = tcp;
             }
 
@@ -152,7 +180,7 @@ namespace fileUpload
         {
             if (this.listView1.SelectedItems.Count > 0)
             {
-                string folder = this.listView1.SelectedItems[0].SubItems[0].Text.ToString();
+                string folder = this.listView1.SelectedItems[0].SubItems[0].Text.ToString().Trim();
                 string fullPath = (path + "\\" + folder).Replace(System.Environment.NewLine, string.Empty);
                 string filepath = this.listView1.SelectedItems[0].SubItems[0].Name.ToString();
 
@@ -161,19 +189,19 @@ namespace fileUpload
                     //返回上一级
                     ShowFolder();
                 }
-                else if (System.IO.Directory.Exists(fullPath))
+                else if (user.folderList().Contains(folder))
                 {
                     //显示文件
-                    ShowFile(fullPath);
+                    ShowFile(folder);
                 }
                 else if (filepath.Length > 0)
                 {
                     //选中文件 下载
-                    string msg = "确定要下载 " + folder + " 吗？";
-                    if ((int)MessageBox.Show(msg, "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == 1)
-                    {
-                        //下载
-                    }
+                    //string msg = "确定要下载 " + folder + " 吗？";
+                    //if ((int)MessageBox.Show(msg, "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == 1)
+                    //{
+                    //    //下载
+                    //}
                 }
                 else
                 {
@@ -182,35 +210,6 @@ namespace fileUpload
             }
         }
 
-        private void listView1_Click(object sender, EventArgs e)
-        {
-            if (this.listView1.SelectedItems.Count > 0)
-            {
-                string folder = this.listView1.SelectedItems[0].SubItems[0].Text.ToString();
-                string fullPath = (path + "\\" + folder).Replace(System.Environment.NewLine, string.Empty);
-                string filepath = this.listView1.SelectedItems[0].SubItems[0].Name.ToString();
-
-                if (fullPath.Contains("..."))
-                {
-                    //返回上一级
-                    ShowFolder();
-                }
-                else if (System.IO.Directory.Exists(fullPath))
-                {
-                    //显示文件
-                    ShowFile(fullPath);
-                }
-                else if (filepath.Length>0)
-                {
-                    //选中文件
-                    int a = 1;
-                }
-                else
-                {
-                   
-                }
-            }
-        }
 
         //显示文件夹 第一级
         private void ShowFolder()
@@ -222,37 +221,130 @@ namespace fileUpload
 
             }  
             this.listView1.Items.Clear();
-            foreach (DirectoryInfo d in root.GetDirectories())
+            List<string> list = user.folderList();
+            foreach (string item in list)
             {
-                //文件夹
-                string folderName = d.Name;
-                string folderFullName = d.FullName;
                 ListViewItem lvi = new ListViewItem();
-                lvi.Text = folderName;
+                lvi.Text = item;
                 this.listView1.Items.Add(lvi);
             }
+            //DirectoryInfo root = new DirectoryInfo(path);
+            //this.listView1.Items.Clear();
+            //foreach (DirectoryInfo d in root.GetDirectories())
+            //{
+            //    //文件夹
+            //    string folderName = d.Name;
+            //    string folderFullName = d.FullName;
+            //    ListViewItem lvi = new ListViewItem();
+            //    lvi.Text = folderName;
+            //    this.listView1.Items.Add(lvi);
+            //}
         }
 
         //显示文件 第二级
-        private void ShowFile(string fullPath)
+        private void ShowFile(string firstFloor)
         {
             this.listView1.Items.Clear();
-            //文件
-            DirectoryInfo root2 = new DirectoryInfo(fullPath);
             ListViewItem ret = new ListViewItem();
             ret.Text = "...";
             this.listView1.Items.Add(ret);
-            System.IO.FileInfo[] fileinfoList = root2.GetFiles();
-            foreach (System.IO.FileInfo fi in fileinfoList)
+            List<DB.FileInfo> list = user.GetFileList(firstFloor);
+            foreach (DB.FileInfo item in list)
             {
-                string fileName = fi.Name;
-                string filePath = fi.FullName;
                 ListViewItem lvi = new ListViewItem();
-                lvi.Text = fileName;
-                lvi.Name = filePath;
+                lvi.Text = item.FileName;
+                lvi.Name = item.FilePath;
                 this.listView1.Items.Add(lvi);
+            }
+
+            //文件
+            //DirectoryInfo root2 = new DirectoryInfo(fullPath);
+            //ListViewItem ret = new ListViewItem();
+            //ret.Text = "...";
+            //this.listView1.Items.Add(ret);
+            //System.IO.FileInfo[] fileinfoList = root2.GetFiles();
+            //foreach (System.IO.FileInfo fi in fileinfoList)
+            //{
+            //    string fileName = fi.Name;
+            //    string filePath = fi.FullName;
+            //    ListViewItem lvi = new ListViewItem();
+            //    lvi.Text = fileName;
+            //    lvi.Name = filePath;
+            //    this.listView1.Items.Add(lvi);
+            //}
+        }
+        //群发消息
+        private void button6_Click(object sender, EventArgs e)
+        {
+            ConcurrentDictionary<string, tcpDataCommunication> tcpList = tcpConnection.tcpList;
+            foreach (KeyValuePair<string, tcpDataCommunication> tcp in tcpList)
+            {
+                tcpDataCommunication tcpComm = tcp.Value;
+                BLE.stringMsg m1 = new BLE.stringMsg();
+                m1.name = BLE.msgEnum.liaotian;
+                m1.value.Add("groupSending", this.richTextBox1.Text);
+                tcpComm.sendData(m1);
+
+            }
+            this.richTextBox1.Text = String.Empty;
+        }
+        //指定用户发送消息
+        private void button5_Click_1(object sender, EventArgs e)
+        {
+            DataGridViewSelectedRowCollection rows = this.dataGridView1.SelectedRows;
+            if (rows.Count > 0)
+            {
+
+
+                foreach (DataGridViewRow item in rows)
+                {
+                    DataGridViewRow itemx = item;
+                    string address = item.Cells[2].Value.ToString();
+
+                    ConcurrentDictionary<string, tcpDataCommunication> tcpList = tcpConnection.tcpList;
+                    List<string> keyList = tcpList.Keys.ToList();
+                    string key = "";
+                    foreach (string keyAddress in keyList)
+                    {
+                        string k = keyAddress.Substring(keyAddress.LastIndexOf("&") + 1, keyAddress.Length - keyAddress.LastIndexOf('&') - 1);
+                        if (k.Equals(address))
+                        {
+                            key = keyAddress;
+                        }
+                    }
+                    tcpDataCommunication tcpComm = tcpList[key];
+                    BLE.stringMsg m1 = new BLE.stringMsg();
+                    m1.name = BLE.msgEnum.liaotian;
+                    m1.value.Add("singleSending", this.richTextBox1.Text);
+                    tcpComm.sendData(m1);
+                    //foreach (KeyValuePair<string, tcpDataCommunication> tcp in tcpList)
+                    //{
+                    //    tcpDataCommunication tcpComm = tcp.Value;
+
+
+
+                    //}
+                    this.richTextBox1.Text = String.Empty;
+
+                }
+            }
+            else
+            {
+                MessageBox.Show("至少选择一个用户");
             }
         }
 
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            //foreach (DataGridViewRow item in this.dataGridView1.Rows)
+            //{
+            //    if ((e.RowIndex).Equals(item.Index))
+            //    {
+            DataGridViewRow row = this.dataGridView1.Rows[e.RowIndex];
+            this.textBox1.Text = row.Cells[2].Value.ToString();
+            //        item.Selected = true;
+            //    }
+            //}
+        }
     }
 }

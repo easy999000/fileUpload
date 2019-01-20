@@ -12,18 +12,15 @@ namespace BLE
     public enum BLEcommand: byte
     {
 
-        /// <summary>
-        /// 用户登入
-        /// </summary>
-        t10 = 10,
+
         /// <summary>
         ///  发送字符串消息
         /// </summary>
-        t11,
+        t11=11,
         /// <summary>
         /// 发送文件
         /// </summary>
-        t12, 
+        t12=12, 
 
 
 

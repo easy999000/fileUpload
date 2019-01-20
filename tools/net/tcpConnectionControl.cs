@@ -75,10 +75,18 @@ namespace tools.net
         /// <param name="ble"></param>
         void newBlemessageEventFun(tcpDataCommunication tcpComm, BLE.BLEData ble)
         {
-            string s1 = ble.ToString();
-            stringMsg m2 = stringMsg.jsonToModel(s1); 
+            string s1 = "";
+            if (ble.command == BLEcommand.t11)
+            {
+                s1 = ble.ToString();
+            }
+            else if (ble.command == BLEcommand.t12)
+            {
+                s1 = ((BLE.bleClass.t12)ble).ReceiveFullMsg;
+            }
+            stringMsg m2 = stringMsg.jsonToModel(s1);
             newMessageEvent?.Invoke(tcpComm, m2);
-            
+
         }
 
         /// <summary>

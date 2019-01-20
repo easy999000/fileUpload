@@ -36,7 +36,7 @@ namespace BLE
         /// </summary>
         readonly BLEcommand _command;
 
-
+        public int currProgress { get; set; }
 
         /// <summary>
         /// 命令
@@ -63,7 +63,10 @@ namespace BLE
         }
 
 
-
+        public string modelToJson()
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
 
 
         /// <summary>

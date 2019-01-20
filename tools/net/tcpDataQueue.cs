@@ -14,6 +14,7 @@ namespace tools.net
     /// <typeparam name="tData"></typeparam>
     public class tcpDataQueue<tData> where tData : class
     {
+        
         /// <summary>
         /// 数据集合,线程安全形,先进先出集合
         /// </summary>
@@ -35,6 +36,10 @@ namespace tools.net
             return true;
         }
 
+        public List<tData> GetSendFileList()
+        {
+            return tcpData.ToList();
+        }
         /// <summary>
         /// 包含元素的数量
         /// </summary>

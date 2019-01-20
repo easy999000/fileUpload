@@ -16,6 +16,11 @@ namespace tools.net
             DataQueue = new tcpDataQueue<BLE.BLEData>();
         }
 
+
+        public List<BLE.BLEData> GetSendFileList()
+        {
+            return DataQueue.GetSendFileList();
+        }
         /// <summary>
         /// 包含元素的数量
         /// </summary> 
@@ -36,6 +41,7 @@ namespace tools.net
         {
             DataQueue.Enqueue(data);
         }
+
 
         /// <summary>
         /// 获取数据,如果当前没有数据,会造成线程阻塞,直到有数据为止.建议使用异步线程,

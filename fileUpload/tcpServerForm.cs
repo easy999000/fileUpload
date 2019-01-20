@@ -24,8 +24,6 @@ namespace fileUpload
         public tcpServerForm()
         {
             InitializeComponent();
-            ConfigInfo config = user.GetSave();
-            path = config.Path;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -144,6 +142,8 @@ namespace fileUpload
 
         private void tcpServerForm_Load(object sender, EventArgs e)
         {
+            ConfigInfo config = user.GetSave();
+            path = config.Path;
             ShowFolder();
         }
 
@@ -216,6 +216,11 @@ namespace fileUpload
         private void ShowFolder()
         {
             DirectoryInfo root = new DirectoryInfo(path);
+            if (!root.Exists)
+            {
+                root.Create();
+
+            }  
             this.listView1.Items.Clear();
             foreach (DirectoryInfo d in root.GetDirectories())
             {

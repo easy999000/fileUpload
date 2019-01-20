@@ -127,10 +127,10 @@ namespace tools.net
 
                     //  dataPro.readData(bs, count);
                     readData(bs, count);
-                    tools.log.writeLog("try:第{0}次",  c.ToString());
                 }
                 catch (NotSupportedException ex1)
                 {
+                    tools.log.writeLog(ex1);
                     connectionDisconnection();
                 }
                 catch (ObjectDisposedException ex2)

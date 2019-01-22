@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using BLE;
+using DB;
 
 namespace tools.net
 {
@@ -21,9 +22,14 @@ namespace tools.net
 
         public readonly TcpClient tcpClient1;
 
+        public UserInfo user;
+
         tcpDataQueueControl DataQueue = new tcpDataQueueControl();
 
-        public List<BLE.BLEData> sendFileList { get; set; }
+        /// <summary>
+        /// 待发送队列
+        /// </summary>
+        public List<BLE.BLEData> waitSendList { get { return this.DataQueue.GetSendFileList(); } }
 
         #region 接收相关字段
         List<byte> data = new List<byte>();
@@ -424,11 +430,29 @@ namespace tools.net
                 }
             }
         }
+        /// <summary>
+        /// 添加发送队列
+        /// </summary>
+        /// <param name="ble"></param>
 
         public void addSendBle(BLEData ble)
         {
             this.DataQueue.Enqueue(ble);
-            sendFileList = this.DataQueue.GetSendFileList();
+          //  waitSendList = this.DataQueue.GetSendFileList();
+        }
+
+        /// <summary>
+        /// 添加发送队列
+        /// </summary>
+        /// <param name="m1"></param>
+        public void addSendBle(BLE.stringMsg m1)
+        {
+            BLE.bleClass.t11 t11 = new BLE.bleClass.t11();
+
+            t11.msg = m1.modelToJson();
+
+            addSendBle(t11);
+             
         }
 
         /// <summary>

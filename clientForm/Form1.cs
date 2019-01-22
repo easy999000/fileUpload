@@ -24,10 +24,60 @@ namespace clientForm
     public partial class Form1 : Form
     {
         UserService user = new UserService();
-        List<BLE.BLEData> currentSendBleData;
+        List<BLE.BLEData> waitSendBleData;
         public Form1()
         {
             InitializeComponent();
+            this.waitSendMsgTimer = new System.Threading.Timer(waitSendMsgTimerFun, zTcpClient1, TimeSpan.FromSeconds(0), TimeSpan.FromMilliseconds(200));
+        }
+
+        /// <summary>
+        /// 处理待发送信息
+        /// </summary>
+        /// <param name="o"></param>
+        void waitSendMsgTimerFun(object o)
+        {
+            if (zTcpClient1 == null)
+            {
+                return;
+            }
+            if (zTcpClient1.tcpComm == null)
+            {
+                return;
+            }
+            int c = zTcpClient1.tcpComm.waitSendList.Count;
+
+            if (zTcpClient1.tcpComm.currentSendBleData!=null)
+            {
+                c++;
+            }
+            string s = "";
+            if (c > 0)
+            {
+                s = c + "条消息待发送";
+            }
+            else
+            {
+                s = "";
+            }
+            showSendMsgTimerFun(s);
+
+        }
+
+        /// <summary>
+        /// 显示待发送信息
+        /// </summary>
+        /// <param name="str"></param>
+        void showSendMsgTimerFun(string str)
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new Action<string>(showSendMsgTimerFun), str);
+                return;
+
+            }
+
+            this.labelWaitSend.Text = str;
         }
 
         tools.net.zTcpClient zTcpClient1 = new tools.net.zTcpClient();
@@ -59,12 +109,15 @@ namespace clientForm
             m1.name = BLE.msgEnum.liaotian;
             m1.value.Add("value", this.richTextBox2.Text);
 
-            zTcpClient1.tcpComm.sendData(m1);
+            //      zTcpClient1.tcpComm.sendData(m1);
+
+            zTcpClient1.tcpComm.addSendBle(m1);
 
 
         }
 
         System.Threading.Timer timer;
+        System.Threading.Timer waitSendMsgTimer;
         //给服务端发送文件
         private void button7_Click(object sender, EventArgs e)
         {
@@ -75,15 +128,15 @@ namespace clientForm
 
                 string fileName = System.IO.Path.GetFileName(t2.sendFileFullPath);
 
-                ConfigInfo config = user.GetSave();
-                string reviced = System.IO.Path.Combine(config.Path + "\\" + CurrUser.currUser.ID, fileName);//d:\\
+                //  ConfigInfo config = user.GetSave();
+                string reviced = System.IO.Path.Combine(CurrUser.config.Path + "\\" + CurrUser.currUser.ID, fileName);//d:\\
                 stringMsg sm = new stringMsg();
                 sm.name = msgEnum.fileUpload;
                 sm.value.Add("value", reviced);//全路径
                 sm.value.Add("UserId", CurrUser.currUser.ID.ToString());//用户id
                 sm.value.Add("FirstFloor", CurrUser.currUser.ID.ToString());//用户专属文件夹
                 sm.value.Add("FileName", fileName);//文件名称
-                sm.value.Add("FirstFloorDir", config.Path + "\\" + CurrUser.currUser.ID);//文件存储路径
+                sm.value.Add("FirstFloorDir", CurrUser.config.Path + "\\" + CurrUser.currUser.ID);//文件存储路径
                 t2.ReceiveFullMsg = sm.modelToJson();
 
 
@@ -91,13 +144,13 @@ namespace clientForm
                 //t2.toBleStream(zTcpClient1.tcpComm.sendDataGetStream());
                 zTcpClient1.tcpComm.addSendBle(t2);
 
-                BLE.BLEData currentSend = zTcpClient1.tcpComm.currentSendBleData;
+                //  BLE.BLEData currentSend = zTcpClient1.tcpComm.currentSendBleData;
                 //发送文件队列 目前问题没有第一个发送的currentSendBleData
-                currentSendBleData = zTcpClient1.tcpComm.sendFileList;
+                // waitSendBleData = zTcpClient1.tcpComm.waitSendList;
 
-                this.listView2.Columns.Clear();
-                this.listView2.Columns.Add("文件名", 500, HorizontalAlignment.Left);
-                this.listView2.Columns.Add("进度", 100, HorizontalAlignment.Left);
+                //this.listView2.Columns.Clear();
+                //this.listView2.Columns.Add("文件名", 500, HorizontalAlignment.Left);
+                //this.listView2.Columns.Add("进度", 100, HorizontalAlignment.Left);
 
                 //currentSend.currProgress
                 //传输的文件
@@ -111,7 +164,7 @@ namespace clientForm
                 // NewMethod(currentSend);
 
                 //}
-                timer = new System.Threading.Timer(currProgress, currentSend, TimeSpan.FromSeconds(0), TimeSpan.FromMilliseconds(500));
+                //  timer = new System.Threading.Timer(currProgress, currentSend, TimeSpan.FromSeconds(0), TimeSpan.FromMilliseconds(200));
 
                 //队列中尚未传输
                 //for (int i = 0; i < currentSendBleData.Count; i++)
@@ -130,40 +183,61 @@ namespace clientForm
 
         private void currProgress(object currentSend)//
         {
+            //if (currentSend == null)
+            //{
+            //    return;
+            //}
 
-            if (listView2.InvokeRequired)
-            {
-                listView2.BeginInvoke(new Action<object>(currProgress), currentSend);
-            }
-            else
-            {
-                BLEData t12 = (BLEData)currentSend;
-                stringMsg msg = stringMsg.jsonToModel(t12.ToString());
-                string fName = msg.value["FileName"];
-                //正在传输的
-                this.listView2.Items.Clear();
-                ListViewItem lvi = new ListViewItem();
-                lvi.Text = fName;
-                lvi.SubItems.Add(t12.currProgress.ToString() + "%");
-                this.listView2.Items.Add(lvi);
-                if (t12.currProgress > 99)
-                {
-                    //timer.Dispose();
-                    this.listView2.Items.Clear();
-                }
-                //队列中尚未传输
-                for (int i = 0; i < currentSendBleData.Count; i++)
-                {
-                    BLEData t12_wait = (BLEData)currentSendBleData[i];
+            //if (listView2.InvokeRequired)
+            //{
+            //    listView2.BeginInvoke(new Action<object>(currProgress), currentSend);
+            //}
+            //else
+            //{
+            //    timer.Dispose();
+            //    BLEData ble = currentSend as BLEData;
+            //    stringMsg msg = stringMsg.jsonToModel(ble.ToString());
+            //    string fName;
+            //    if (msg.name == msgEnum.fileUpload)
+            //    {
+            //        fName = msg.value["FileName"];
+            //    }
+            //    else
+            //    {
+            //        fName = "文字消息";
+            //    }
+            //    //正在传输的
+            //    this.listView2.Items.Clear();
+            //    ListViewItem lvi = new ListViewItem();
+            //    lvi.Text = fName;
+            //    lvi.SubItems.Add(ble.currProgress.ToString() + "%");
+            //    this.listView2.Items.Add(lvi);
+            //    if (ble.currProgress > 99)
+            //    {
+            //        //timer.Dispose();
+            //        this.listView2.Items.Clear();
+            //    }
+            //    //队列中尚未传输
+            //    for (int i = 0; i < waitSendBleData.Count; i++)
+            //    {
+            //        BLEData t12_wait = (BLEData)waitSendBleData[i];
 
-                    stringMsg msg_wait = stringMsg.jsonToModel(t12_wait.ToString());
-                    string fName_wait = msg_wait.value["FileName"];
-                    ListViewItem lvi_wait = new ListViewItem();
-                    lvi_wait.Text = fName_wait;
-                    lvi_wait.SubItems.Add("等待中...");
-                    this.listView2.Items.Add(lvi_wait);
-                }
-            }
+            //        stringMsg msg_wait = stringMsg.jsonToModel(t12_wait.ToString());
+            //        string fName_wait;
+            //        if (msg.name == msgEnum.fileUpload)
+            //        {
+            //            fName_wait = msg.value["FileName"];
+            //        }
+            //        else
+            //        {
+            //            fName_wait = "文字消息";
+            //        }
+            //        ListViewItem lvi_wait = new ListViewItem();
+            //        lvi_wait.Text = fName_wait;
+            //        lvi_wait.SubItems.Add("等待中...");
+            //        this.listView2.Items.Add(lvi_wait);
+            //    }
+            //}
 
 
         }
@@ -212,15 +286,23 @@ namespace clientForm
         //刷新列表
         private void button3_Click(object sender, EventArgs e)
         {
+            zTcpClient1.send_getUserFileList(CurrUser.currUser);
             //刷新列表
-            ResetList();
+            ///  ResetList();
         }
 
-        //重置
-        private void ResetList()
+        //显示文件列表
+        private void ResetList(stringMsg msg)
         {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new Action<stringMsg>(ResetList), msg);
+                return;
+
+            }
+            List<DB.FileInfo> list = JsonConvert.DeserializeObject<List<DB.FileInfo>>(msg.value["value"]);
+
             this.listView1.Items.Clear();
-            List<DB.FileInfo> list = user.GetFileListByUserId(CurrUser.currUser.ID);
             foreach (DB.FileInfo item in list)
             {
                 ListViewItem lvi = new ListViewItem();
@@ -286,9 +368,7 @@ namespace clientForm
             //string jsonText = ((BLE.bleClass.t11)ble).msg;
             //JObject jo = (JObject)JsonConvert.DeserializeObject(jsonText);
 
-            BLE.bleClass.t11 t11 = (BLE.bleClass.t11)ble;
-            stringMsg msg = stringMsg.jsonToModel(t11.msg);
-
+            stringMsg msg = stringMsg.jsonToModel(ble.ToString());
 
             switch (msg.name)
             {
@@ -300,8 +380,10 @@ namespace clientForm
 
 
                         RetUser curr = JsonConvert.DeserializeObject<RetUser>(msg.value["jsonCurr"]);
+                        ConfigInfo ConfigInfo1 = JsonConvert.DeserializeObject<ConfigInfo>(msg.value["ConfigInfo"]);
                         //RetUser curr = user.Login(login.textBox1.Text, login.textBox2.Text);
                         CurrUser.currUser = curr.User;
+                        CurrUser.config = ConfigInfo1;
                         CloseFrom2();
                         ShowFile(curr.User.ID);
                     }
@@ -323,6 +405,9 @@ namespace clientForm
                         reciveMsg = msg.value["singleSending"];
                     }
                     showMsg(reciveMsg);
+                    break;
+                case msgEnum.returnUserFileList:
+                    ResetList(msg);
                     break;
                 default:
                     break;
@@ -361,22 +446,24 @@ namespace clientForm
         //读取用户文件信息
         void ShowFile(int userId)
         {
-            if (listView1.InvokeRequired)
-            {
-                this.BeginInvoke(new Action<int>(ShowFile), userId);
-            }
-            else
-            {
-                listView1.Items.Clear();
-                List<DB.FileInfo> list = user.GetFileListByUserId(userId);
-                foreach (DB.FileInfo item in list)
-                {
-                    ListViewItem lvi = new ListViewItem();
-                    lvi.Text = item.FileName;
-                    lvi.Name = item.FilePath;
-                    listView1.Items.Add(lvi);
-                }
-            }
+
+            zTcpClient1.send_getUserFileList(CurrUser.currUser);
+            //if (listView1.InvokeRequired)
+            //{
+            //    this.BeginInvoke(new Action<int>(ShowFile), userId);
+            //}
+            //else
+            //{
+            //    listView1.Items.Clear();
+            //    List<DB.FileInfo> list = user.GetFileListByUserId(userId);
+            //    foreach (DB.FileInfo item in list)
+            //    {
+            //        ListViewItem lvi = new ListViewItem();
+            //        lvi.Text = item.FileName;
+            //        lvi.Name = item.FilePath;
+            //        listView1.Items.Add(lvi);
+            //    }
+            //}
         }
         //显示服务端消息
         void showMsg(string msg)

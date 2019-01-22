@@ -244,7 +244,7 @@ namespace BLE.bleClass
         #endregion
 
         #region 发送
-        
+
 
         public override byte[] toBleByte()
         {
@@ -288,23 +288,28 @@ namespace BLE.bleClass
             sr.Write(messageData[1], 0, messageData[1].Count());
             sr.Write(messageData[2], 0, messageData[2].Count());
 
-            //fileStream.CopyTo(sr);
-            byte[] bytes = new byte[128];
-            float num = 0;
-            while (true)
-            {
-                // byte[] srByte = StreamToBytes(sr, num);
+            fileStream.CopyTo(sr);
 
-                int n = fileStream.Read(bytes, 0, 128);
-                if (n == 0)
-                {
-                    break;
-                }
-                sr.Write(bytes, 0, n);
-                num += n;
+            #region 手动流复制
+            ////手动流复制
+            //byte[] bytes = new byte[128];
+            //float num = 0;
+            //while (true)
+            //{
+            //    // byte[] srByte = StreamToBytes(sr, num);
 
-                currProgress = int.Parse(Math.Ceiling((num / fileStream.Length)*100).ToString());
-            }
+            //    int n = fileStream.Read(bytes, 0, 128);
+            //    if (n == 0)
+            //    {
+            //        break;
+            //    }
+            //    sr.Write(bytes, 0, n);
+            //    num += n;
+
+            //    currProgress = int.Parse(Math.Ceiling((num / fileStream.Length)*100).ToString());
+            //}
+            /////
+            #endregion
 
             fileStream.Close();
             //}
@@ -316,14 +321,6 @@ namespace BLE.bleClass
             //}
         }
 
-        public System.IO.Stream toBleStream()
-        {
-            MemoryStream ms = new MemoryStream();
-
-            System.Threading.ThreadPool.QueueUserWorkItem(setStream, ms);
-
-            return ms;
-        }
 
         void setStream(object o)
         {

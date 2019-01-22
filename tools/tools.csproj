@@ -58,6 +58,10 @@
       <Project>{95c08872-c518-49dd-8447-99a3cd838dcf}</Project>
       <Name>BLE</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DB\DB.csproj">
+      <Project>{CBDD8776-D620-486F-BBFD-27D98EE23233}</Project>
+      <Name>DB</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

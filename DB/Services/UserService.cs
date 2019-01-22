@@ -165,14 +165,24 @@ namespace DB.Services
             {
                 try
                 {
-                    FileInfo file = new FileInfo();
-                    file.Download = 0;
-                    file.FileName = fileName;
-                    file.FilePath = filePath;
-                    file.FirstFloor = firstFloor;
-                    file.UpLoadTime = DateTime.Now;
-                    file.UserId = userId;
-                    db.FileInfo.Add(file);
+                    var f1 = db.FileInfo.Where(o => o.UserId == userId && o.FileName == fileName).ToList();
+                    if (f1.Count==0)
+                    {
+
+                        FileInfo file = new FileInfo();
+                        file.Download = 0;
+                        file.FileName = fileName;
+                        file.FilePath = filePath;
+                        file.FirstFloor = firstFloor;
+                        file.UpLoadTime = DateTime.Now;
+                        file.UserId = userId;
+                        db.FileInfo.Add(file);
+
+                    }
+                    else
+                    {
+                        f1[0].UpLoadTime = DateTime.Now;
+                    }
                     db.SaveChanges();
                     return true;
                 }

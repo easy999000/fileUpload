@@ -22,6 +22,14 @@ namespace BLE
         /// 获取目录
         /// </summary>
         getDir,
+        /// <summary>
+        /// 请求用文件列表
+        /// </summary>
+        getUserFileList,
+        /// <summary>
+        /// 返回用文件列表
+        /// </summary>
+        returnUserFileList,
 
     }
 }

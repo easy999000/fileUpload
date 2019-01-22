@@ -75,9 +75,27 @@ namespace fileUpload
                 case msgEnum.dengru:
                     denglu(tcpComm, msg);
                     break;
+                case msgEnum.getUserFileList:
+                    getUserFileList(tcpComm, msg);
+                    break;
                 default:
                     break;
             }
+
+        }
+        void getUserFileList(tcpDataCommunication tcpComm, stringMsg msg)
+        {
+            if (tcpComm.user==null)
+            {
+                return;
+            }
+            List<DB.FileInfo> list = user.GetFileListByUserId(tcpComm.user.ID);
+            stringMsg ret = new stringMsg();
+            ret.name = msgEnum.returnUserFileList;
+            ret.value["value"] = JsonConvert.SerializeObject(list);
+
+            tcpComm.addSendBle(ret);
+
 
         }
 
@@ -114,6 +132,7 @@ namespace fileUpload
 
             if (curr.Success)
             {
+                tcpComm.user = curr.User;
                 if (Common.tcpList == null)
                 {
                     Common.tcpList = new List<TCP>();
@@ -126,9 +145,17 @@ namespace fileUpload
             m1.name = BLE.msgEnum.dengru;
             m1.value.Add("return", curr.Success.ToString());
             m1.value.Add("ID", curr.User.ID.ToString());
+
             string jsonCurr = JsonConvert.SerializeObject(curr);
             m1.value.Add("jsonCurr", jsonCurr);
+
+            ConfigInfo config = user.GetSave();
+            string jsonConfig = JsonConvert.SerializeObject(config);
+            m1.value.Add("ConfigInfo", jsonConfig);
+
             tcpComm.sendData(m1);
+
+           // UserService user = new UserService();
         }
         void BindDataGridView(List<TCP> tcp)
         {
@@ -219,7 +246,7 @@ namespace fileUpload
             {
                 root.Create();
 
-            }  
+            }
             this.listView1.Items.Clear();
             List<string> list = user.folderList();
             foreach (string item in list)

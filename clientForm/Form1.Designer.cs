@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.labelWaitSend = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -48,8 +49,6 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.listView2 = new System.Windows.Forms.ListView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -65,7 +64,6 @@
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
-            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -78,6 +76,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.labelWaitSend);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.button1);
             this.splitContainer1.Panel1.Controls.Add(this.textBox1);
@@ -88,9 +87,19 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(646, 394);
+            this.splitContainer1.Size = new System.Drawing.Size(773, 392);
             this.splitContainer1.SplitterDistance = 45;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // labelWaitSend
+            // 
+            this.labelWaitSend.AutoSize = true;
+            this.labelWaitSend.ForeColor = System.Drawing.Color.Red;
+            this.labelWaitSend.Location = new System.Drawing.Point(630, 21);
+            this.labelWaitSend.Name = "labelWaitSend";
+            this.labelWaitSend.Size = new System.Drawing.Size(89, 12);
+            this.labelWaitSend.TabIndex = 11;
+            this.labelWaitSend.Text = "10条消息待发送";
             // 
             // label1
             // 
@@ -152,14 +161,13 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Font = new System.Drawing.Font("宋体", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tabControl1.ItemSize = new System.Drawing.Size(100, 40);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(646, 345);
+            this.tabControl1.Size = new System.Drawing.Size(773, 343);
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl1.TabIndex = 9;
             // 
@@ -169,7 +177,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 44);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(638, 297);
+            this.tabPage1.Size = new System.Drawing.Size(765, 295);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "消息";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -189,8 +197,8 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.richTextBox2);
             this.splitContainer2.Panel2.Controls.Add(this.button5);
-            this.splitContainer2.Size = new System.Drawing.Size(632, 291);
-            this.splitContainer2.SplitterDistance = 144;
+            this.splitContainer2.Size = new System.Drawing.Size(759, 289);
+            this.splitContainer2.SplitterDistance = 143;
             this.splitContainer2.TabIndex = 9;
             // 
             // richTextBox1
@@ -198,7 +206,7 @@
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Location = new System.Drawing.Point(0, 0);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(632, 144);
+            this.richTextBox1.Size = new System.Drawing.Size(759, 143);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             // 
@@ -209,14 +217,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox2.Location = new System.Drawing.Point(0, 4);
             this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(627, 94);
+            this.richTextBox2.Size = new System.Drawing.Size(754, 93);
             this.richTextBox2.TabIndex = 6;
             this.richTextBox2.Text = "";
             // 
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(527, 102);
+            this.button5.Location = new System.Drawing.Point(654, 101);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(98, 34);
             this.button5.TabIndex = 7;
@@ -230,7 +238,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 44);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(638, 297);
+            this.tabPage2.Size = new System.Drawing.Size(765, 295);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "文件";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -303,32 +311,11 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.listView2);
-            this.tabPage3.Location = new System.Drawing.Point(4, 44);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(638, 297);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "传输列表";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // listView2
-            // 
-            this.listView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView2.Location = new System.Drawing.Point(3, 3);
-            this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(632, 291);
-            this.listView2.TabIndex = 0;
-            this.listView2.UseCompatibleStateImageBehavior = false;
-            this.listView2.View = System.Windows.Forms.View.Details;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(646, 394);
+            this.ClientSize = new System.Drawing.Size(773, 392);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
             this.Text = "client";
@@ -348,7 +335,6 @@
             this.splitContainer3.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -375,8 +361,7 @@
         private System.Windows.Forms.Button button4;
         public System.Windows.Forms.ListView listView1;
         public System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.ListView listView2;
+        private System.Windows.Forms.Label labelWaitSend;
     }
 }
 

@@ -10,5 +10,6 @@ namespace clientForm
     public class CurrUser
     {
         public static UserInfo currUser;
+        public static ConfigInfo config  ;
     }
 }

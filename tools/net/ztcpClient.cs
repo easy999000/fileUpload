@@ -33,6 +33,10 @@ namespace tools.net
 
         public void send_getUserFileList(UserInfo currUser)
         {
+            if (currUser==null)
+            {
+                return;
+            }
 
             BLE.stringMsg m1 = new BLE.stringMsg();
             m1.name = BLE.msgEnum.getUserFileList;

@@ -54,6 +54,27 @@ namespace fileUpload
             tcpServerListener.start();
 
             tcpConnection = tcpServerListener.connControl;
+            setStartOrEnd(1);
+
+
+        }
+
+        /// <summary>
+        /// 1是启动
+        /// </summary>
+        /// <param name="i"></param>
+        void setStartOrEnd(int i)
+        {
+            if (i == 1)
+            {
+                this.button1.Enabled = false;
+                this.button2.Enabled = !this.button1.Enabled;
+            }
+            else
+            {
+                this.button1.Enabled = true;
+                this.button2.Enabled = !this.button1.Enabled;
+            }
         }
         /// <summary>
         /// 消息接收事件处理程序
@@ -211,7 +232,7 @@ namespace fileUpload
                 string fullPath = (path + "\\" + folder).Replace(System.Environment.NewLine, string.Empty);
                 string filepath = this.listView1.SelectedItems[0].SubItems[0].Name.ToString();
 
-                if (fullPath.Contains("..."))
+                if (fullPath.Contains("上一页"))
                 {
                     //返回上一级
                     ShowFolder();
@@ -237,6 +258,35 @@ namespace fileUpload
             }
         }
 
+        /// <summary>
+        /// 创建文件项
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public ListViewItem createFileItem(DB.FileInfo info)
+        {
+            ListViewItem lvi = new ListViewItem();
+            lvi.ImageIndex = 1;
+            lvi.Text = info.FileName;
+            lvi.Tag = info.FilePath;
+            lvi.SubItems.Add(info.UpLoadTime.ToString());
+            lvi.SubItems.Add(info.Download.ToString());
+            return lvi;
+        }
+
+        /// <summary>
+        /// 创建文件项
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public ListViewItem createFolderItem(string name)
+        {
+            ListViewItem lvi = new ListViewItem();
+            lvi.ImageIndex = 0;
+            lvi.Text = name;
+           
+            return lvi;
+        }
 
         //显示文件夹 第一级
         private void ShowFolder()
@@ -250,10 +300,8 @@ namespace fileUpload
             this.listView1.Items.Clear();
             List<string> list = user.folderList();
             foreach (string item in list)
-            {
-                ListViewItem lvi = new ListViewItem();
-                lvi.Text = item;
-                this.listView1.Items.Add(lvi);
+            { 
+                this.listView1.Items.Add(createFolderItem(item));
             }
             //DirectoryInfo root = new DirectoryInfo(path);
             //this.listView1.Items.Clear();
@@ -272,16 +320,14 @@ namespace fileUpload
         private void ShowFile(string firstFloor)
         {
             this.listView1.Items.Clear();
-            ListViewItem ret = new ListViewItem();
-            ret.Text = "...";
-            this.listView1.Items.Add(ret);
+            
+             
+            this.listView1.Items.Add(createFolderItem("上一页"));
             List<DB.FileInfo> list = user.GetFileList(firstFloor);
             foreach (DB.FileInfo item in list)
             {
-                ListViewItem lvi = new ListViewItem();
-                lvi.Text = item.FileName;
-                lvi.Name = item.FilePath;
-                this.listView1.Items.Add(lvi);
+
+                this.listView1.Items.Add(createFileItem(item));
             }
 
             //文件
@@ -372,6 +418,19 @@ namespace fileUpload
             //        item.Selected = true;
             //    }
             //}
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            Application.Exit();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.tcpServerListener.stop();
+
+            setStartOrEnd(0);
         }
     }
 }

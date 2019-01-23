@@ -305,11 +305,20 @@ namespace clientForm
             this.listView1.Items.Clear();
             foreach (DB.FileInfo item in list)
             {
-                ListViewItem lvi = new ListViewItem();
-                lvi.Text = item.FileName;
-                lvi.Name = item.FilePath;
-                listView1.Items.Add(lvi);
+                //ListViewItem lvi = new ListViewItem();
+                //lvi.Text = item.FileName;
+                //lvi.Name = item.FilePath;
+                listView1.Items.Add(createFileItem(item));
             }
+        }
+
+        public ListViewItem createFileItem(DB.FileInfo info)
+        {
+            ListViewItem lvi = new ListViewItem();
+            lvi.ImageIndex = 1;
+            lvi.Text = info.FileName;
+            lvi.Tag= info.FilePath; 
+            return lvi;
         }
 
         //下载方法

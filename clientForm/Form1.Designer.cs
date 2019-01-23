@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.labelWaitSend = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -49,6 +51,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -245,6 +248,7 @@
             // 
             // splitContainer3
             // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer3.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer3.Location = new System.Drawing.Point(3, 3);
             this.splitContainer3.Name = "splitContainer3";
@@ -259,25 +263,25 @@
             this.splitContainer3.Panel2.Controls.Add(this.button4);
             this.splitContainer3.Panel2.Controls.Add(this.button3);
             this.splitContainer3.Panel2.Controls.Add(this.button7);
-            this.splitContainer3.Size = new System.Drawing.Size(632, 291);
-            this.splitContainer3.SplitterDistance = 237;
+            this.splitContainer3.Size = new System.Drawing.Size(759, 289);
+            this.splitContainer3.SplitterDistance = 235;
             this.splitContainer3.TabIndex = 0;
             // 
             // listView1
             // 
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView1.LargeImageList = this.imageList1;
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(632, 237);
+            this.listView1.Size = new System.Drawing.Size(759, 235);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.List;
             this.listView1.DoubleClick += new System.EventHandler(this.listView1_DoubleClick);
             // 
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(410, 8);
+            this.button4.Location = new System.Drawing.Point(537, 8);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(98, 34);
             this.button4.TabIndex = 10;
@@ -288,7 +292,7 @@
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(306, 8);
+            this.button3.Location = new System.Drawing.Point(433, 8);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(98, 34);
             this.button3.TabIndex = 9;
@@ -299,7 +303,7 @@
             // button7
             // 
             this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button7.Location = new System.Drawing.Point(514, 8);
+            this.button7.Location = new System.Drawing.Point(641, 8);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(98, 34);
             this.button7.TabIndex = 8;
@@ -310,6 +314,13 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "wenjianjia.gif");
+            this.imageList1.Images.SetKeyName(1, "wenjian.jpg");
             // 
             // Form1
             // 
@@ -362,6 +373,7 @@
         public System.Windows.Forms.ListView listView1;
         public System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label labelWaitSend;
+        private System.Windows.Forms.ImageList imageList1;
     }
 }
 

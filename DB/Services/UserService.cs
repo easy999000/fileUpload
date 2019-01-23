@@ -98,7 +98,7 @@ namespace DB.Services
             {
                 try
                 {
-                    List<string> str = db.FileInfo.OrderBy(x => x.FirstFloor).Select(x => x.FirstFloor).Distinct().ToList<string>();
+                    List<string> str = db.FileInfo.OrderBy(x => x.FirstFloor).Select(x => x.FirstFloor).Distinct().ToList();
                     return str;
                 }
                 catch (Exception ex)

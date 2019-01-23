@@ -59,6 +59,7 @@ namespace tools.net
         public void stop()
         {
             tcpListener1.Stop();
+            connControl.stop();
 
         }
 
@@ -71,7 +72,12 @@ namespace tools.net
 #if DEBUG
             //           tools.log.writeLog("tcpListenerControl.tcpListenerBegin 线程:{0},监听等待", System.Threading.Thread.CurrentThread.ManagedThreadId);
 #endif
-            tcpListener1.BeginAcceptTcpClient(new AsyncCallback(tcpListenerEnd), o);
+            try
+            {
+                tcpListener1.BeginAcceptTcpClient(new AsyncCallback(tcpListenerEnd), o);
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -80,7 +86,8 @@ namespace tools.net
         /// <param name="ia"></param>
         void tcpListenerEnd(IAsyncResult ia)
         {
-            tcpListenerBegin(null);
+            tcpListenerBegin(ia);
+             
 
             TcpClient tcp2 = tcpListener1.EndAcceptTcpClient(ia);
 

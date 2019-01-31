@@ -13,17 +13,20 @@ namespace tools.net
 
 
         public tcpDataCommunication tcpComm;
+
         public int Connect(System.Net.IPEndPoint ip)
         {
             System.Net.Sockets.TcpClient tcp = new System.Net.Sockets.TcpClient();
             tcp.Connect(ip);
             tcpComm = new tcpDataCommunication(tcp);
+
             return 0;
         }
 
+
         public int sendString(string str1)
         {
-            if (tcpComm==null)
+            if (tcpComm == null)
             {
                 return -1;
             }
@@ -33,15 +36,15 @@ namespace tools.net
 
         public void send_getUserFileList(UserInfo currUser)
         {
-            if (currUser==null)
+            if (currUser == null)
             {
                 return;
             }
 
             BLE.stringMsg m1 = new BLE.stringMsg();
             m1.name = BLE.msgEnum.getUserFileList;
-            m1.value.Add("UserId",  currUser.ID.ToString());//用户id 
-            tcpComm.addSendBle(m1); 
+            m1.value.Add("UserId", currUser.ID.ToString());//用户id 
+            tcpComm.addSendBle(m1);
         }
 
 

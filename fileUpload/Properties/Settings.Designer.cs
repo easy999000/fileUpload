@@ -22,5 +22,16 @@ namespace fileUpload.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=DESKTOP-0001;Initial Catalog=fileUpload;Persist Security Info=True;Us" +
+            "er ID=sa;Password=abc123")]
+        public string fileUploadConnectionString {
+            get {
+                return ((string)(this["fileUploadConnectionString"]));
+            }
+        }
     }
 }

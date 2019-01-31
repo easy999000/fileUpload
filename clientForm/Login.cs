@@ -154,5 +154,10 @@ namespace clientForm
             }
         }
 
+        private void Login_FormClosed(object sender, FormClosedEventArgs e)
+        {
+           // form1.zTcpClient1.tcpComm.stop();
+            //   zTcpClient1.tcpComm.stop();
+        }
     }
 }

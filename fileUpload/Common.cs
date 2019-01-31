@@ -9,11 +9,11 @@ namespace fileUpload
     public class Common
     {
         public const string FILE_NAME = "FileSavePath.txt";
-        public static List<TCP> tcpList;
+        public static List<UserView> UserViewList = new List<UserView>();
         
     }
 
-    public class TCP
+    public class UserView
     {
         public int ID { get; set; }
         public string Name { get; set; }

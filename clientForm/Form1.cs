@@ -47,7 +47,7 @@ namespace clientForm
             }
             int c = zTcpClient1.tcpComm.waitSendList.Count;
 
-            if (zTcpClient1.tcpComm.currentSendBleData!=null)
+            if (zTcpClient1.tcpComm.currentSendBleData != null)
             {
                 c++;
             }
@@ -80,7 +80,7 @@ namespace clientForm
             this.labelWaitSend.Text = str;
         }
 
-        tools.net.zTcpClient zTcpClient1 = new tools.net.zTcpClient();
+        public tools.net.zTcpClient zTcpClient1 = new tools.net.zTcpClient();
         Login login;
 
         private void button2_Click(object sender, EventArgs e)
@@ -94,10 +94,19 @@ namespace clientForm
             }
             int port;
             b = int.TryParse(textBox2.Text, out port);
-            zTcpClient1.Connect(new System.Net.IPEndPoint(ip, port));
+            try
+            {
+                zTcpClient1.Connect(new System.Net.IPEndPoint(ip, port));
 
+            }
+            catch (System.Net.Sockets.SocketException ex1)
+            {
+                MessageBox.Show("连接失败");
+                return;
+            }
             zTcpClient1.tcpComm.newBleMessageEvent += newBlemessageEventFun;
-
+            zTcpClient1.tcpComm.connectionDisconnectionEvent += connectionDisconnectionEventFun;
+            setStartOrEnd(1);
             login = new clientForm.Login(zTcpClient1, this);
             login.Show();
 
@@ -111,7 +120,13 @@ namespace clientForm
 
             //      zTcpClient1.tcpComm.sendData(m1);
 
+            //if (zTcpClient1.tcpComm.tcpClient1.Connected)
+            //{
+
+            //}
+
             zTcpClient1.tcpComm.addSendBle(m1);
+            this.richTextBox2.Text = "";
 
 
         }
@@ -245,6 +260,7 @@ namespace clientForm
         private void button1_Click(object sender, EventArgs e)
         {
             zTcpClient1.tcpComm.stop();
+            setStartOrEnd(0);
         }
 
         private void listView1_DoubleClick(object sender, EventArgs e)
@@ -317,7 +333,7 @@ namespace clientForm
             ListViewItem lvi = new ListViewItem();
             lvi.ImageIndex = 1;
             lvi.Text = info.FileName;
-            lvi.Tag= info.FilePath; 
+            lvi.Tag = info.FilePath;
             return lvi;
         }
 
@@ -327,7 +343,7 @@ namespace clientForm
             if (this.listView1.SelectedItems.Count > 0)
             {
                 string folder = this.listView1.SelectedItems[0].SubItems[0].Text.ToString().Trim();
-                string filepath = this.listView1.SelectedItems[0].SubItems[0].Name.ToString();
+                string filepath = this.listView1.SelectedItems[0].Tag == null ? "" : this.listView1.SelectedItems[0].Tag.ToString();
                 if (filepath.Length > 0)
                 {
                     //选中文件 下载
@@ -398,7 +414,7 @@ namespace clientForm
                     }
                     else
                     {
-                        zTcpClient1.tcpComm.stop();
+                        //   zTcpClient1.tcpComm.stop();
                         MessageBox.Show("账号或密码错误!");
                     }
                     break;
@@ -484,9 +500,41 @@ namespace clientForm
             else
             {
                 this.richTextBox1.Text += string.Format("[{0}]: ", DateTime.Now.ToString()) + msg + "\r\n\r\n";
+                richTextBox1.SelectionStart = richTextBox1.Text.Length;
+                richTextBox1.ScrollToCaret();
             }
 
         }
 
+        /// <summary>
+        /// 1是连接
+        /// </summary>
+        /// <param name="i"></param>
+        void setStartOrEnd(int i)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action<int>(setStartOrEnd), i);
+                return;
+
+            }
+            if (i == 1)
+            {
+                this.buttonDuankai.Enabled = true;
+            }
+            else
+            {
+                this.buttonDuankai.Enabled = false;
+            }
+            this.buttonLianjie.Enabled = !this.buttonDuankai.Enabled;
+            this.button3.Enabled = this.buttonDuankai.Enabled;
+            this.button4.Enabled = this.buttonDuankai.Enabled;
+            this.button5.Enabled = this.buttonDuankai.Enabled;
+            this.button7.Enabled = this.buttonDuankai.Enabled;
+        }
+        public void connectionDisconnectionEventFun(tcpDataCommunication comm)
+        {
+            setStartOrEnd(0);
+        }
     }
 }

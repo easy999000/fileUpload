@@ -54,7 +54,10 @@ namespace tools.net
         /// </summary>
         public event Action<tcpDataCommunication, BLEData> newBleMessageEvent;
 
-
+        /// <summary>
+        /// 连接断开事件
+        /// </summary>
+        public event Action<tcpDataCommunication> connectionDisconnectionEvent;
 
         /// <summary>
         /// 
@@ -62,6 +65,11 @@ namespace tools.net
         System.Threading.Thread thReading;
         #endregion
         #region 发送相关字段
+
+        /// <summary>
+        /// 心跳
+        /// </summary>
+        public System.Threading.Timer sendXintiao;
 
         /// <summary>
         /// 发送线程
@@ -78,6 +86,17 @@ namespace tools.net
         ////测试结果,tcp不管调用多少次GetStream,获取到的都是同一个stream对象. 一个流可以同时进行读取和写入(可能是有2个缓冲区).
         ////连接断开后,设备会不会自动重新连接服务器.
 
+
+        void xintiao(object o)
+        {
+            if (this.waitSendList.Count < 1 && this.currentSendBleData == null)
+            {
+                BLE.stringMsg s1 = new BLE.stringMsg();
+                s1.name = BLE.msgEnum.xintiao;
+                this.addSendBle(s1);
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -86,7 +105,11 @@ namespace tools.net
         public tcpDataCommunication(TcpClient tcp)
         {
             tcpClient1 = tcp;
+            tcpClient1.ReceiveTimeout = 20 * 1000;
+            ///  tcpClient1.SendTimeout = 20 * 1000;
             //this.tcpName = tcpName1;
+
+            sendXintiao = new System.Threading.Timer(new System.Threading.TimerCallback(xintiao), null, 0, 9 * 1000);
 
             tcpClientId = tcpClient1.GetHashCode().ToString() + "&" + DateTime.Now.ToFileTime() + "&" + tcpClient1.Client.RemoteEndPoint.ToString();
 
@@ -112,6 +135,7 @@ namespace tools.net
         {
             this.tcpClient1.Close();
             this.thReading.Abort();
+            this.thSending.Abort();
         }
 
         #region 接收相关函数
@@ -147,25 +171,25 @@ namespace tools.net
                 catch (NotSupportedException ex1)
                 {
                     whileSwitch = false;
-                    tools.log.writeLog("NotSupportedException:{0},第{1}次", ex1.Message, c.ToString());
+                    // tools.log.writeLog("NotSupportedException:{0},第{1}次", ex1.Message, c.ToString());
                     connectionDisconnection();
                 }
                 catch (ObjectDisposedException ex2)
                 {
                     whileSwitch = false;
-                    tools.log.writeLog("ObjectDisposedException:{0},第{1}次", ex2.Message, c.ToString());
+                    //   tools.log.writeLog("ObjectDisposedException:{0},第{1}次", ex2.Message, c.ToString());
                     connectionDisconnection();
                 }
                 catch (IOException ex3)
                 {
                     whileSwitch = false;
-                    tools.log.writeLog("IOException:{0},第{1}次", ex3.Message, c.ToString());
+                    //     tools.log.writeLog("IOException:{0},第{1}次", ex3.Message, c.ToString());
                     connectionDisconnection();
                 }
                 catch (System.Threading.ThreadAbortException ex)
                 {
                     whileSwitch = false;
-                    tools.log.writeLog("ThreadAbortException:{0},第{1}次", ex.Message, c.ToString());
+                    //   tools.log.writeLog("ThreadAbortException:{0},第{1}次", ex.Message, c.ToString());
                     ///线程终止
                     connectionDisconnection();
                 }
@@ -177,7 +201,9 @@ namespace tools.net
         /// </summary>
         void connectionDisconnection()
         {
+            sendXintiao.Dispose();
             this.tcpClient1.Close();
+            connectionDisconnectionEvent?.Invoke(this);
             this.thReading.Abort();
             this.thSending.Abort();
         }
@@ -438,7 +464,7 @@ namespace tools.net
         public void addSendBle(BLEData ble)
         {
             this.DataQueue.Enqueue(ble);
-          //  waitSendList = this.DataQueue.GetSendFileList();
+            //  waitSendList = this.DataQueue.GetSendFileList();
         }
 
         /// <summary>
@@ -452,7 +478,7 @@ namespace tools.net
             t11.msg = m1.modelToJson();
 
             addSendBle(t11);
-             
+
         }
 
         /// <summary>

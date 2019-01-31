@@ -24,6 +24,8 @@ namespace fileUpload
 
         private void seting_Load(object sender, EventArgs e)
         {
+            // TODO: 这行代码将数据加载到表“fileUploadDataSet.UserInfo”中。您可以根据需要移动或删除它。
+            this.userInfoTableAdapter.Fill(this.fileUploadDataSet.UserInfo);
             DB.ConfigInfo config =user.GetSave();
             this.textBox5.Text = config.Path;
         }
@@ -33,6 +35,13 @@ namespace fileUpload
             if (this.textBox5.Text.Length > 0)
             {
                 bool bl = user.EditPath(this.textBox5.Text);
+
+               this.userInfoTableAdapter.Update(this.fileUploadDataSet.UserInfo);
+
+
+                //this.fileUploadDataSet.AcceptChanges();
+               // this.userInfoBindingSource.ResetBindings(false);
+
                 //WriteFile(sPath);
                 if (bl)
                 {

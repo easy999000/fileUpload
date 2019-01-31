@@ -30,6 +30,10 @@ namespace BLE
         /// 返回用文件列表
         /// </summary>
         returnUserFileList,
+        /// <summary>
+        /// 心跳连接
+        /// </summary>
+        xintiao,
 
     }
 }

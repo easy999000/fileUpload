@@ -33,9 +33,9 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.labelWaitSend = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonDuankai = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonLianjie = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -47,11 +47,11 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.listView1 = new System.Windows.Forms.ListView();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -81,9 +81,9 @@
             // 
             this.splitContainer1.Panel1.Controls.Add(this.labelWaitSend);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
-            this.splitContainer1.Panel1.Controls.Add(this.button1);
+            this.splitContainer1.Panel1.Controls.Add(this.buttonDuankai);
             this.splitContainer1.Panel1.Controls.Add(this.textBox1);
-            this.splitContainer1.Panel1.Controls.Add(this.button2);
+            this.splitContainer1.Panel1.Controls.Add(this.buttonLianjie);
             this.splitContainer1.Panel1.Controls.Add(this.label4);
             this.splitContainer1.Panel1.Controls.Add(this.textBox2);
             // 
@@ -100,9 +100,8 @@
             this.labelWaitSend.ForeColor = System.Drawing.Color.Red;
             this.labelWaitSend.Location = new System.Drawing.Point(630, 21);
             this.labelWaitSend.Name = "labelWaitSend";
-            this.labelWaitSend.Size = new System.Drawing.Size(89, 12);
+            this.labelWaitSend.Size = new System.Drawing.Size(0, 12);
             this.labelWaitSend.TabIndex = 11;
-            this.labelWaitSend.Text = "10条消息待发送";
             // 
             // label1
             // 
@@ -113,16 +112,17 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "服务端IP:";
             // 
-            // button1
+            // buttonDuankai
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(520, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(98, 34);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "断开";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonDuankai.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonDuankai.Enabled = false;
+            this.buttonDuankai.Location = new System.Drawing.Point(520, 3);
+            this.buttonDuankai.Name = "buttonDuankai";
+            this.buttonDuankai.Size = new System.Drawing.Size(98, 34);
+            this.buttonDuankai.TabIndex = 10;
+            this.buttonDuankai.Text = "断开";
+            this.buttonDuankai.UseVisualStyleBackColor = true;
+            this.buttonDuankai.Click += new System.EventHandler(this.button1_Click);
             // 
             // textBox1
             // 
@@ -132,16 +132,16 @@
             this.textBox1.TabIndex = 1;
             this.textBox1.Text = "127.0.0.1";
             // 
-            // button2
+            // buttonLianjie
             // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button2.Location = new System.Drawing.Point(419, 3);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(98, 34);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "连接";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.buttonLianjie.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonLianjie.Location = new System.Drawing.Point(419, 3);
+            this.buttonLianjie.Name = "buttonLianjie";
+            this.buttonLianjie.Size = new System.Drawing.Size(98, 34);
+            this.buttonLianjie.TabIndex = 9;
+            this.buttonLianjie.Text = "连接";
+            this.buttonLianjie.UseVisualStyleBackColor = true;
+            this.buttonLianjie.Click += new System.EventHandler(this.button2_Click);
             // 
             // label4
             // 
@@ -227,6 +227,7 @@
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button5.Enabled = false;
             this.button5.Location = new System.Drawing.Point(654, 101);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(98, 34);
@@ -278,9 +279,17 @@
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.DoubleClick += new System.EventHandler(this.listView1_DoubleClick);
             // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "wenjianjia.gif");
+            this.imageList1.Images.SetKeyName(1, "wenjian.jpg");
+            // 
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button4.Enabled = false;
             this.button4.Location = new System.Drawing.Point(537, 8);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(98, 34);
@@ -292,6 +301,7 @@
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.Enabled = false;
             this.button3.Location = new System.Drawing.Point(433, 8);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(98, 34);
@@ -303,6 +313,7 @@
             // button7
             // 
             this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button7.Enabled = false;
             this.button7.Location = new System.Drawing.Point(641, 8);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(98, 34);
@@ -315,19 +326,13 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "wenjianjia.gif");
-            this.imageList1.Images.SetKeyName(1, "wenjian.jpg");
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(773, 392);
             this.Controls.Add(this.splitContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "client";
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -359,8 +364,8 @@
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonDuankai;
+        private System.Windows.Forms.Button buttonLianjie;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         public System.Windows.Forms.Button button5;
         private System.Windows.Forms.TabControl tabControl1;

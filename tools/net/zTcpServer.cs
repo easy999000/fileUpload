@@ -87,11 +87,18 @@ namespace tools.net
         void tcpListenerEnd(IAsyncResult ia)
         {
             tcpListenerBegin(ia);
-             
 
-            TcpClient tcp2 = tcpListener1.EndAcceptTcpClient(ia);
 
-            connControl.addTcp(tcp2);
+            try
+            {
+                TcpClient tcp2 = tcpListener1.EndAcceptTcpClient(ia);
+                connControl.addTcp(tcp2);
+            }
+            catch (System.ObjectDisposedException ex2)
+            {
+                return;
+            }
+
 
             //this.mainService1.tcpConnection0.addTcp(tcp2);
         }

@@ -59,13 +59,19 @@ namespace tools.net
         public tcpDataCommunication addTcp(TcpClient tcp)
         {
             tcpDataCommunication tcpCommunication = new tcpDataCommunication(tcp);
+
             tcpCommunication.newBleMessageEvent += newBlemessageEventFun;
+            tcpCommunication.connectionDisconnectionEvent += connectionDisconnectionEventFun;
 
             if (this.tcpList.TryAdd(tcpCommunication.tcpClientId, tcpCommunication))
             {
                 addTcpEvent?.Invoke(tcpCommunication);
             }
             return tcpCommunication;
+        }
+        public void connectionDisconnectionEventFun(tcpDataCommunication comm)
+        {
+            removeTcp(comm);
         }
 
         /// <summary>

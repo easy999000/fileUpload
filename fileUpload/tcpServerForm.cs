@@ -38,6 +38,14 @@ namespace fileUpload
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            /////付款前临时代码
+            if (DateTime.Now>DateTime.Parse("2019-2-4"))
+            {
+                this.Close();
+                Application.Exit();
+
+            }
+            /////
             System.Net.IPAddress ip;
             bool b = System.Net.IPAddress.TryParse(textBox2.Text, out ip);
             if (!b)
@@ -51,12 +59,26 @@ namespace fileUpload
 
             tcpServerListener = new tools.net.zTcpServer(ip, port);
             tcpServerListener.connControl.newMessageEvent += newBlemessageEventFun;
+            tcpServerListener.connControl.removeTcpEvent += connectionDisconnectionEventFun;
             tcpServerListener.start();
 
             tcpConnection = tcpServerListener.connControl;
             setStartOrEnd(1);
 
 
+        }
+        public void connectionDisconnectionEventFun(tcpDataCommunication comm)
+        {
+            if (comm.user == null)
+            {
+                return;
+            }
+
+            UserView u1 = Common.UserViewList.Find(o => o.Address == comm.tcpClientId.Split('&')[2]);
+
+            Common.UserViewList.Remove(u1);
+            BindDataGridView(Common.UserViewList);
+            //  setStartOrEnd(0);
         }
 
         /// <summary>
@@ -106,7 +128,7 @@ namespace fileUpload
         }
         void getUserFileList(tcpDataCommunication tcpComm, stringMsg msg)
         {
-            if (tcpComm.user==null)
+            if (tcpComm.user == null)
             {
                 return;
             }
@@ -151,39 +173,43 @@ namespace fileUpload
 
             RetUser curr = user.Login(account, pwd);
 
-            if (curr.Success)
-            {
-                tcpComm.user = curr.User;
-                if (Common.tcpList == null)
-                {
-                    Common.tcpList = new List<TCP>();
-                }
-                Common.tcpList.Add(new TCP() { ID = curr.User.ID, Name = curr.User.Account, Address = address });
-                BindDataGridView(Common.tcpList);
-            }
-
             BLE.stringMsg m1 = new BLE.stringMsg();
             m1.name = BLE.msgEnum.dengru;
             m1.value.Add("return", curr.Success.ToString());
-            m1.value.Add("ID", curr.User.ID.ToString());
 
-            string jsonCurr = JsonConvert.SerializeObject(curr);
-            m1.value.Add("jsonCurr", jsonCurr);
 
-            ConfigInfo config = user.GetSave();
-            string jsonConfig = JsonConvert.SerializeObject(config);
-            m1.value.Add("ConfigInfo", jsonConfig);
+            if (curr.Success)
+            {
+                tcpComm.user = curr.User;
+                if (Common.UserViewList == null)
+                {
+                    Common.UserViewList = new List<UserView>();
+                }
+                Common.UserViewList.Add(new UserView() { ID = curr.User.ID, Name = curr.User.Account, Address = address });
+                BindDataGridView(Common.UserViewList);
+                m1.value.Add("ID", curr.User.ID.ToString());
+
+                string jsonCurr = JsonConvert.SerializeObject(curr);
+                m1.value.Add("jsonCurr", jsonCurr);
+
+                ConfigInfo config = user.GetSave();
+                string jsonConfig = JsonConvert.SerializeObject(config);
+                m1.value.Add("ConfigInfo", jsonConfig);
+            }
+
+
+
 
             tcpComm.sendData(m1);
 
-           // UserService user = new UserService();
+            // UserService user = new UserService();
         }
-        void BindDataGridView(List<TCP> tcp)
+        void BindDataGridView(List<UserView> tcp)
         {
             if (this.InvokeRequired)
             {
                 //this.BeginInvoke(new Action<List<TCP>>(BindDataGridView), null);
-                this.BeginInvoke(new Action<List<TCP>>(BindDataGridView), tcp);
+                this.BeginInvoke(new Action<List<UserView>>(BindDataGridView), tcp);
             }
             else
             {
@@ -201,6 +227,8 @@ namespace fileUpload
             else
             {
                 this.richTextBox2.Text += string.Format("[{0}]: ", DateTime.Now.ToString()) + msg + "\r\n\r\n";
+                richTextBox2.SelectionStart = richTextBox2.Text.Length;
+                richTextBox2.ScrollToCaret();
             }
 
         }
@@ -284,7 +312,7 @@ namespace fileUpload
             ListViewItem lvi = new ListViewItem();
             lvi.ImageIndex = 0;
             lvi.Text = name;
-           
+
             return lvi;
         }
 
@@ -300,7 +328,7 @@ namespace fileUpload
             this.listView1.Items.Clear();
             List<string> list = user.folderList();
             foreach (string item in list)
-            { 
+            {
                 this.listView1.Items.Add(createFolderItem(item));
             }
             //DirectoryInfo root = new DirectoryInfo(path);
@@ -320,8 +348,8 @@ namespace fileUpload
         private void ShowFile(string firstFloor)
         {
             this.listView1.Items.Clear();
-            
-             
+
+
             this.listView1.Items.Add(createFolderItem("上一页"));
             List<DB.FileInfo> list = user.GetFileList(firstFloor);
             foreach (DB.FileInfo item in list)
@@ -431,6 +459,11 @@ namespace fileUpload
             this.tcpServerListener.stop();
 
             setStartOrEnd(0);
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            ShowFolder();
         }
     }
 }

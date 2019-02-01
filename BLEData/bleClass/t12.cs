@@ -52,9 +52,9 @@ namespace BLE.bleClass
         List<byte> fileDataLengthByte = new List<byte>();
 
         /// <summary>
-        /// filePath字节
+        /// msgByte
         /// </summary>
-        List<byte> filePathByte = new List<byte>();
+        List<byte> msgByte = new List<byte>();
 
         FileStream fileWrite;
 
@@ -66,7 +66,7 @@ namespace BLE.bleClass
             msgByteLength = 0;
             msgByteLengthByte.Clear();
             fileDataLength = 0;
-            filePathByte.Clear();
+            msgByte.Clear();
             if (fileWrite != null)
             {
                 //fileWrite.Flush();
@@ -147,29 +147,35 @@ namespace BLE.bleClass
                     if (currentPosition < beforIndex + msgByteLength)
                     {
                         ////当前位置小于消息长度,为消息内容
-                        filePathByte.Add(b);
+                        msgByte.Add(b);
 
                     }
                     else if (currentPosition == beforIndex + msgByteLength)
                     {
                         ////当前位置等于消息长度,为消息结尾
-                        filePathByte.Add(b);
-                        string pathJson = getString(filePathByte.ToArray());
+                        msgByte.Add(b);
+                        string msgJson = getString(msgByte.ToArray());
 
                         // stringMsg sm = stringMsg.jsonToModel(pathJson);
 
-                        this.ReceiveFullMsg = pathJson;
+                        this.ReceiveFullMsg = msgJson;
 
                         try
                         {
-                            string dir = stringMsg.jsonToModel(pathJson).value["FirstFloorDir"];
+                            stringMsg FullMsg = stringMsg.jsonToModel(msgJson);
+                            string rfmPath = FullMsg.value["value"];
+                            if (rfmPath.Trim()=="")
+                            {
+                                errorData();
+                                return 0;
+                            }
+                            string dir = System.IO.Path.GetDirectoryName(rfmPath);
                             if (!Directory.Exists(dir))
                             {
                                 Directory.CreateDirectory(dir);
                             }
 
 
-                            string rfmPath = stringMsg.jsonToModel(pathJson).value["value"];
                             fileWrite = System.IO.File.Create(rfmPath);//ReceiveFullMsg
                         }
                         #region 创建文件异常处理

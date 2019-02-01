@@ -34,6 +34,10 @@ namespace BLE
         /// 心跳连接
         /// </summary>
         xintiao,
+        /// <summary>
+        /// 获取下载文件
+        /// </summary>
+        getDownLandFile,
 
     }
 }

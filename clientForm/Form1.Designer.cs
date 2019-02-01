@@ -52,6 +52,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -379,6 +380,7 @@
         public System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label labelWaitSend;
         private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 

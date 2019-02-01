@@ -39,7 +39,7 @@ namespace fileUpload
         private void button1_Click_1(object sender, EventArgs e)
         {
             /////付款前临时代码
-            if (DateTime.Now>DateTime.Parse("2019-2-4"))
+            if (DateTime.Now > DateTime.Parse("2019-2-4"))
             {
                 this.Close();
                 Application.Exit();
@@ -121,10 +121,43 @@ namespace fileUpload
                 case msgEnum.getUserFileList:
                     getUserFileList(tcpComm, msg);
                     break;
+                case msgEnum.getDownLandFile:
+                    getDownLandFile(tcpComm, msg);
+                    break;
+
                 default:
                     break;
             }
 
+        }
+        void getDownLandFile(tcpDataCommunication tcpComm, stringMsg msg)
+        {
+            string serverPath = msg.value["serverPath"];
+            string clientPath = msg.value["clientPath"];
+
+            stringMsg returnMsg = new stringMsg();
+            returnMsg.name = msgEnum.fileUpload;
+
+            if (File.Exists(serverPath))
+            {
+                returnMsg.value.Add("value", clientPath);
+               // returnMsg.value.Add("fileDirFullPath", System.IO.Path.GetDirectoryName( clientPath));
+                //    byte[] data = myWebClient.DownloadData(filepath);
+                //    string endPath = path + "\\" + CheckFileName(path, folder);//含重名验证,如重名覆盖则改成:path+"\\"+folder
+                //    FileStream fs = new FileStream(endPath, FileMode.Create);
+                //    fs.Write(data, 0, data.Length);
+                //    fs.Close();
+                //    MessageBox.Show("下载成功！", "提示");
+                //    user.UpdateDownLand(filepath);
+                //    user.Add_Log_Opera(CurrUser.currUser.ID, CurrUser.currUser.Account, string.Format("下载文件{0}", folder));
+            }
+            else
+            {
+                returnMsg.value.Add("value", "");
+                //MessageBox.Show("文件不存在！", "提示");
+                //user.Add_Log_Error(CurrUser.currUser.ID, CurrUser.currUser.Account, string.Format("下载文件{0}出现问题", folder));
+            }
+            tcpComm.addSendBle(returnMsg);
         }
         void getUserFileList(tcpDataCommunication tcpComm, stringMsg msg)
         {

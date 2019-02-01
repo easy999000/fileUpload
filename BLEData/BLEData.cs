@@ -62,11 +62,7 @@ namespace BLE
             }
         }
 
-
-        public string modelToJson()
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
+         
 
 
         /// <summary>

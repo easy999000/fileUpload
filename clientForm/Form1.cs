@@ -151,7 +151,7 @@ namespace clientForm
                 sm.value.Add("UserId", CurrUser.currUser.ID.ToString());//用户id
                 sm.value.Add("FirstFloor", CurrUser.currUser.ID.ToString());//用户专属文件夹
                 sm.value.Add("FileName", fileName);//文件名称
-                sm.value.Add("FirstFloorDir", CurrUser.config.Path + "\\" + CurrUser.currUser.ID);//文件存储路径
+                sm.value.Add("fileDirFullPath", CurrUser.config.Path + "\\" + CurrUser.currUser.ID);//文件存储路径
                 t2.ReceiveFullMsg = sm.modelToJson();
 
 
@@ -296,7 +296,7 @@ namespace clientForm
         private void button4_Click(object sender, EventArgs e)
         {
             //下载
-            DownLand();
+            DownLand2();
         }
 
         //刷新列表
@@ -337,6 +337,44 @@ namespace clientForm
             return lvi;
         }
 
+        //下载方法
+        private void DownLand2()
+        {
+            if (this.listView1.SelectedItems.Count > 0)
+            {
+                string folder = this.listView1.SelectedItems[0].SubItems[0].Text.ToString().Trim();
+                string serverPath = this.listView1.SelectedItems[0].Tag == null ? "" : this.listView1.SelectedItems[0].Tag.ToString();
+                if (serverPath.Length > 0)
+                {
+                    //选中文件 下载
+                    string msg = "确定要下载 " + folder + " 吗？";
+                    if ((int)MessageBox.Show(msg, "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == 1)
+                    {
+
+                        if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            try
+                            {
+                                //下载
+                                string clientPath = saveFileDialog1.FileName;
+
+                                stringMsg m1 = new stringMsg();
+                                m1.name = msgEnum.getDownLandFile;
+                                m1.value.Add("serverPath", serverPath);
+                                m1.value.Add("clientPath", clientPath);
+
+                                this.zTcpClient1.tcpComm.addSendBle(m1);
+
+                            }
+                            catch (Exception ex)
+                            {
+                                tools.log.writeLog("DownloadDataException:{0},文件信息:{1}", ex.Message, serverPath);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         //下载方法
         private void DownLand()
         {
@@ -434,12 +472,23 @@ namespace clientForm
                 case msgEnum.returnUserFileList:
                     ResetList(msg);
                     break;
+                case msgEnum.fileUpload:
+                    fileUpload(tcpComm, ble);
+                    break;
                 default:
                     break;
             }
 
-
-
+        }
+        void fileUpload(tcpDataCommunication tcpComm, BLEData msg)
+        {
+            stringMsg m1 = stringMsg.jsonToModel( msg.ToString());
+            if (m1.value["value"].Trim()=="")
+            {
+                MessageBox.Show("下载失败,服务端文件不存在", "提示");
+                return;
+            }
+            MessageBox.Show("下载完成", "提示");
         }
         //关闭登录框窗体
         void CloseFrom2()

@@ -60,6 +60,11 @@ namespace tools.net
         public event Action<tcpDataCommunication> connectionDisconnectionEvent;
 
         /// <summary>
+        /// 正在接受数据事件
+        /// </summary>
+        public event Action<tcpDataCommunication, bool> isReading;
+
+        /// <summary>
         /// 
         /// </summary>
         System.Threading.Thread thReading;
@@ -227,7 +232,7 @@ namespace tools.net
                         {
                             data.Add(b);
                             currentPosition++;
-
+                            isReading?.Invoke(this, true);
                         }
                         else
                         {
@@ -286,7 +291,7 @@ namespace tools.net
                         }
                         catch (Exception ex)
                         {
-                            tools.log.writeLog("readData:第{0}次,错误:{1}", i.ToString(), ex.Message);
+                            // tools.log.writeLog("readData:第{0}次,错误:{1}", i.ToString(), ex.Message);
                             errorData();
                             break;
                         }
@@ -323,6 +328,7 @@ namespace tools.net
             data.Clear();
             dataLength = 0;
             currentPosition = 0;
+            isReading?.Invoke(this, false);
         }
 
         /// <summary>
@@ -473,11 +479,44 @@ namespace tools.net
         /// <param name="m1"></param>
         public void addSendBle(BLE.stringMsg m1)
         {
-            BLE.bleClass.t11 t11 = new BLE.bleClass.t11();
+            BLEData ble1;
+            if (m1.name == msgEnum.fileUpload)
+            {
+                string sendFileFullPath = m1.value["sendFileFullPath"];
+                string saveFileFullPath = m1.value["saveFileFullPath"];
 
-            t11.msg = m1.modelToJson();
+                BLE.bleClass.t12 t12 = new BLE.bleClass.t12();
 
-            addSendBle(t11);
+                //  t12.sendFileFullPath = sendFileFullPath;
+
+                //  string fileName = System.IO.Path.GetFileName(sendFileFullPath);
+
+                //  ConfigInfo config = user.GetSave();
+                //  string reviced = System.IO.Path.Combine(CurrUser.config.Path + "\\" + CurrUser.currUser.ID, fileName);//d:\\
+                //stringMsg sm = new stringMsg();
+                //sm.name = msgEnum.fileUpload;
+                //sm.value.Add("sendFileFullPath", sendFileFullPath); 
+                //sm.value.Add("saveFileFullPath", saveFileFullPath); 
+
+                //   sm.value.Add("fileDirFullPath", CurrUser.config.Path + "\\" + CurrUser.currUser.ID);//文件存储路径
+
+
+                t12.ReceiveFullMsg = m1.modelToJson();
+
+
+
+                ble1 = t12;
+            }
+            else
+            {
+                BLE.bleClass.t11 t11 = new BLE.bleClass.t11();
+
+                t11.msg = m1.modelToJson();
+
+                ble1 = t11;
+            }
+
+            addSendBle(ble1);
 
         }
 

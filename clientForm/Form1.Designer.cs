@@ -53,6 +53,7 @@
             this.button7 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -80,6 +81,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.label2);
             this.splitContainer1.Panel1.Controls.Add(this.labelWaitSend);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.buttonDuankai);
@@ -99,7 +101,7 @@
             // 
             this.labelWaitSend.AutoSize = true;
             this.labelWaitSend.ForeColor = System.Drawing.Color.Red;
-            this.labelWaitSend.Location = new System.Drawing.Point(630, 21);
+            this.labelWaitSend.Location = new System.Drawing.Point(630, 7);
             this.labelWaitSend.Name = "labelWaitSend";
             this.labelWaitSend.Size = new System.Drawing.Size(0, 12);
             this.labelWaitSend.TabIndex = 11;
@@ -327,6 +329,15 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.Red;
+            this.label2.Location = new System.Drawing.Point(630, 26);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(0, 12);
+            this.label2.TabIndex = 12;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -381,6 +392,7 @@
         private System.Windows.Forms.Label labelWaitSend;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Label label2;
     }
 }
 

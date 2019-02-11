@@ -23,14 +23,7 @@ namespace BLE.bleClass
         {
             get; set;
         }
-
-        /// <summary>
-        /// 发送文件,发送端完整路径,接收端无效
-        /// </summary>
-        public string sendFileFullPath
-        {
-            get; set;
-        }
+         
 
         #region 接收数据变量
         /// <summary>
@@ -163,7 +156,7 @@ namespace BLE.bleClass
                         try
                         {
                             stringMsg FullMsg = stringMsg.jsonToModel(msgJson);
-                            string rfmPath = FullMsg.value["value"];
+                            string rfmPath = FullMsg.value["saveFileFullPath"];
                             if (rfmPath.Trim()=="")
                             {
                                 errorData();
@@ -261,26 +254,25 @@ namespace BLE.bleClass
             //try
             //{
 
-
-            byte[] path = getByte(ReceiveFullMsg);
-            byte[] pathLength = getByte(path.Length);
+            stringMsg Msg = stringMsg.jsonToModel(ReceiveFullMsg);
+            string sendFileFullPath = Msg.value["sendFileFullPath"];
+            
+            byte[] FullMsg = getByte(ReceiveFullMsg);
+            byte[] FullMsgLength = getByte(FullMsg.Length);
 
             Stream fileStream = System.IO.File.OpenRead(sendFileFullPath);
             byte[] streamLength = getByte(fileStream.Length);
 
             //////////////////////
-
-
-
-
+            
             ////////////////
-            allDataLength = pathLength.LongLength + path.LongLength;///1
+            allDataLength = FullMsgLength.LongLength + FullMsg.LongLength;///1
 
-            messageData[0] = pathLength;//2
+            messageData[0] = FullMsgLength;//2
 
             messageData[1] = streamLength;///3
 
-            messageData[2] = path;///3
+            messageData[2] = FullMsg;///3
 
             List<byte> l1 = new List<byte>();
             l1.AddRange(head);
@@ -328,46 +320,46 @@ namespace BLE.bleClass
         }
 
 
-        void setStream(object o)
-        {
-            MemoryStream ms = o as MemoryStream;
-            if (ms == null)
-            {
-                return;
-            }
+        //void setStream(object o)
+        //{
+        //    MemoryStream ms = o as MemoryStream;
+        //    if (ms == null)
+        //    {
+        //        return;
+        //    }
 
-            byte[] path = getByte(ReceiveFullMsg);
-            byte[] pathLength = getByte(path.Length);
+        //    byte[] path = getByte(ReceiveFullMsg);
+        //    byte[] pathLength = getByte(path.Length);
 
-            Stream fileStream = System.IO.File.OpenRead(sendFileFullPath);
-            byte[] streamLength = getByte(fileStream.Length);
-
-
-            List<byte> l1 = new List<byte>();
-            l1.AddRange(head);
-            l1.Add((byte)command);
-            l1.AddRange(getByte(this.allDataLength));
-
-            allDataLength = pathLength.LongLength + path.LongLength;///1
-
-            messageData[0] = pathLength;//2
-
-            messageData[1] = streamLength;///3
-
-            messageData[2] = path;///3
-
-            ms.Write(l1.ToArray(), 0, l1.Count);
-            ms.Write(messageData[0], 0, messageData[0].Count());
-            ms.Write(messageData[1], 0, messageData[1].Count());
-            ms.Write(messageData[2], 0, messageData[2].Count());
-
-            fileStream.CopyTo(ms);
-
-            fileStream.Close();
-            //  ms.Close();
+        //    Stream fileStream = System.IO.File.OpenRead(sendFileFullPath);
+        //    byte[] streamLength = getByte(fileStream.Length);
 
 
-        }
+        //    List<byte> l1 = new List<byte>();
+        //    l1.AddRange(head);
+        //    l1.Add((byte)command);
+        //    l1.AddRange(getByte(this.allDataLength));
+
+        //    allDataLength = pathLength.LongLength + path.LongLength;///1
+
+        //    messageData[0] = pathLength;//2
+
+        //    messageData[1] = streamLength;///3
+
+        //    messageData[2] = path;///3
+
+        //    ms.Write(l1.ToArray(), 0, l1.Count);
+        //    ms.Write(messageData[0], 0, messageData[0].Count());
+        //    ms.Write(messageData[1], 0, messageData[1].Count());
+        //    ms.Write(messageData[2], 0, messageData[2].Count());
+
+        //    fileStream.CopyTo(ms);
+
+        //    fileStream.Close();
+        //    //  ms.Close();
+
+
+        //}
         #endregion
 
 

@@ -39,7 +39,7 @@ namespace fileUpload
         private void button1_Click_1(object sender, EventArgs e)
         {
             /////付款前临时代码
-            if (DateTime.Now > DateTime.Parse("2019-2-4"))
+            if (DateTime.Now > DateTime.Parse("2019-2-19"))
             {
                 this.Close();
                 Application.Exit();
@@ -112,7 +112,7 @@ namespace fileUpload
                     liaotian(tcpComm, msg);
                     break;
                 case msgEnum.fileUpload:
-                    showMsg(string.Format("收到文件{0}", msg.value["FileName"]));
+                    showMsg(string.Format("收到文件{0}", System.IO.Path.GetFileName(msg.value["saveFileFullPath"])));
                     bool bl = AddFileInfo(msg);
                     break;
                 case msgEnum.dengru:
@@ -132,15 +132,17 @@ namespace fileUpload
         }
         void getDownLandFile(tcpDataCommunication tcpComm, stringMsg msg)
         {
-            string serverPath = msg.value["serverPath"];
-            string clientPath = msg.value["clientPath"];
 
+            string sendFileFullPath = msg.value["sendFileFullPath"];
+            string saveFileFullPath = msg.value["saveFileFullPath"];
+       
             stringMsg returnMsg = new stringMsg();
             returnMsg.name = msgEnum.fileUpload;
 
-            if (File.Exists(serverPath))
+            if (File.Exists(sendFileFullPath))
             {
-                returnMsg.value.Add("value", clientPath);
+                returnMsg.value.Add("sendFileFullPath", sendFileFullPath);//全路径
+                returnMsg.value.Add("saveFileFullPath", saveFileFullPath);//全路径
                // returnMsg.value.Add("fileDirFullPath", System.IO.Path.GetDirectoryName( clientPath));
                 //    byte[] data = myWebClient.DownloadData(filepath);
                 //    string endPath = path + "\\" + CheckFileName(path, folder);//含重名验证,如重名覆盖则改成:path+"\\"+folder
@@ -153,7 +155,8 @@ namespace fileUpload
             }
             else
             {
-                returnMsg.value.Add("value", "");
+                returnMsg.value.Add("saveFileFullPath", "");
+                returnMsg.value.Add("sendFileFullPath", "");
                 //MessageBox.Show("文件不存在！", "提示");
                 //user.Add_Log_Error(CurrUser.currUser.ID, CurrUser.currUser.Account, string.Format("下载文件{0}出现问题", folder));
             }
@@ -178,7 +181,7 @@ namespace fileUpload
         private bool AddFileInfo(stringMsg msg)
         {
             int userId = Convert.ToInt32(msg.value["UserId"]);
-            string filePath = msg.value["value"];
+            string filePath = msg.value["saveFileFullPath"];
             string firstFloor = msg.value["FirstFloor"];
             string fileName = msg.value["FileName"];
             bool bl = user.AddFileInfo(userId, filePath, firstFloor, fileName);

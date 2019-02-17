@@ -181,6 +181,8 @@ namespace DB.Services
                     }
                     else
                     {
+                       // f1[0].FileName = fileName;
+                        f1[0].FilePath = filePath;
                         f1[0].UpLoadTime = DateTime.Now;
                     }
                     db.SaveChanges();

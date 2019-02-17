@@ -39,12 +39,12 @@ namespace fileUpload
         private void button1_Click_1(object sender, EventArgs e)
         {
             /////付款前临时代码
-            if (DateTime.Now > DateTime.Parse("2019-2-19"))
-            {
-                this.Close();
-                Application.Exit();
+            //if (DateTime.Now > DateTime.Parse("2019-2-19"))
+            //{
+            //    this.Close();
+            //    Application.Exit();
 
-            }
+            //}
             /////
             System.Net.IPAddress ip;
             bool b = System.Net.IPAddress.TryParse(textBox2.Text, out ip);
@@ -161,6 +161,7 @@ namespace fileUpload
                 //user.Add_Log_Error(CurrUser.currUser.ID, CurrUser.currUser.Account, string.Format("下载文件{0}出现问题", folder));
             }
             tcpComm.addSendBle(returnMsg);
+            user.UpdateDownLand(sendFileFullPath);
         }
         void getUserFileList(tcpDataCommunication tcpComm, stringMsg msg)
         {

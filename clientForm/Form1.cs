@@ -370,15 +370,15 @@ namespace clientForm
                 {
                     //选中文件 下载
                     string msg = "确定要下载 " + folder + " 吗？";
-                    if ((int)MessageBox.Show(msg, "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == 1)
+                    //if ((int)MessageBox.Show(msg, "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == 1)
                     {
-                        this.saveFileDialog1.FileName = System.IO.Path.GetFileName(sendFileFullPath);
-                        if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
+                        this.saveFileDialog2.FileName = System.IO.Path.GetFileName(sendFileFullPath);
+                        if (this.saveFileDialog2.ShowDialog() == DialogResult.OK)
                         {
                             try
                             {
                                 //下载
-                                string saveFileFullPath = saveFileDialog1.FileName;
+                                string saveFileFullPath = saveFileDialog2.FileName;
 
                                 stringMsg m1 = new stringMsg();
                                 m1.name = msgEnum.getDownLandFile;
@@ -511,7 +511,11 @@ namespace clientForm
                // MessageBox.Show("下载失败,服务端文件不存在", "提示");
                 return;
             }
-            showMsg("<下载完成>");
+
+            string fileName = System.IO.Path.GetFileName(m1.value["saveFileFullPath"]);
+
+
+            showMsg(string.Format("<{0} 下载完成>", fileName));
             //MessageBox.Show("下载完成", "提示");
         }
         //关闭登录框窗体
